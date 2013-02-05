@@ -1,5 +1,6 @@
-<?php
-
+<?xml version="1.0"?>
+<!DOCTYPE modification SYSTEM "http://www.simplemachines.org/xml/modification">
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 * @package manifest file for Live clock in header
 * @version 1.0 Alpha
@@ -29,11 +30,16 @@
 * Contributor(s):
 *
 */
+ - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
-add_integration_function('integrate_pre_include', '$sourcedir/LiveClock.php');
-add_integration_function('integrate_actions', 'LC_addAction', true);
+<modification xmlns="http://www.simplemachines.org/xml/modification" xmlns:smf="http://www.simplemachines.org/">
+	<id>sid2varun:liveclockinheader</id>
+	<version>1.0 Alpha</version>
 
-if (SMF == 'SSI')
-	echo 'Database adaptation successful!';
-
-?>
+	<file name="$themedir/index.template.php">
+		<operation>
+			<search position="after"><![CDATA[]]></search>
+			<add><![CDATA[]]></add>
+		</operation>
+	</file>
+</modification>
