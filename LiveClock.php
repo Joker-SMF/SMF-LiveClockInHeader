@@ -35,15 +35,13 @@ if (!defined('SMF'))
 
 loadLanguage('LiveClock');
 
-function live_clock_ob(&$buffer)
+function LC_addAction(&$actionArray)
 {
-	global $txt, $modSettings, $context;
+	$actionArray['liveclock'] = array('LiveClock.php', 'LC_mainIndex');
+}
 
-	if (!empty($modSettings['report_board']) && !empty($modSettings['enable_large_report_field']))
-	{
-		$buffer = preg_replace('~(' . preg_quote('<li>', $context['current_time'], '</li>') . ')~', '<li>', $context['current_time'], '</li>', $buffer);
-	}
-	return $buffer;
+function LC_mainIndex() {
+	echo 'LC_mainIndex called';
 }
 
 ?>

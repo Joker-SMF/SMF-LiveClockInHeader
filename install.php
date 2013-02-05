@@ -31,8 +31,7 @@
 */
 
 add_integration_function('integrate_pre_include', '$sourcedir/LiveClock.php');
-add_integration_function('integrate_buffer', 'live_clock_ob');
-
+add_integration_function('integrate_actions', 'LC_addAction', true);
 
 if (SMF == 'SSI')
 	echo 'Database adaptation successful!';
