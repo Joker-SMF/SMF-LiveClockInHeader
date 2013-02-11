@@ -112,7 +112,18 @@ function LC_saveBasicSettings() {
 }
 
 function LC_displayTimezones() {
-	global $context, $sourcedir;
+	global $context, $sourcedir, $txt;
+
+	/* I can has Adminz? */
+	isAllowedTo('admin_forum');
+
+	require_once('Subs-LiveClock.php');
+
+	$context['live_clock_timezones'] = LC_getALlTimeZones();
+	$context['page_title'] = $txt['lc_admin_panel'];
+	$context['sub_template'] = 'lc_admin_timezone_setting_panel';
+	$context['live_clock']['tab_name'] = $txt['lc_timezone_settings'];
+	$context['live_clock']['tab_desc'] = $txt['lc_timezone_settings_desc'];
 }
 
 ?>

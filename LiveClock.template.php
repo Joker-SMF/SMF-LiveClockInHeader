@@ -113,4 +113,34 @@ function template_lc_admin_basic_setting_panel()
 	<br class="clear">';
 }
 
+function template_lc_admin_timezone_setting_panel() {
+	global $context, $txt, $scripturl;
+
+	template_lc_admin_info();
+
+	echo '
+	<div id="admincenter">
+		<form action="'. $scripturl .'?action=admin;area=liveclock;sa=savetimezones" method="post" accept-charset="UTF-8">
+			<div class="windowbg2">
+				<span class="topslice"><span></span></span>';
+
+				foreach ($context['live_clock_timezones'] as $timezones) {
+					echo '
+					<input type="text" name="timezone_name_'. $timezones['id_zone'] .'" size="50" maxlength="255"  name="" value="', $timezones['zone_name'] ,'" class="input_text" placeholder="'. $txt['lc_timezone_name'] .'" />';
+					echo '
+					<input type="text" name="timezone_diff_'. $timezones['id_zone'] .'" size="5" maxlength="5" name="" value="', $timezones['zone_diff'] ,'" class="input_text" placeholder="'. $txt['lc_timezone_diff'] .'" /><br />';
+				}
+
+				echo '
+					<br /><input type="submit" name="submit" value="', $txt['lc_submit'], '" tabindex="', $context['tabindex']++, '" class="button_submit" />';
+	
+				echo '
+				<span class="botslice"><span></span></span>
+			</div>
+	
+		</form>
+	</div>
+	<br class="clear">';
+}
+
 ?>

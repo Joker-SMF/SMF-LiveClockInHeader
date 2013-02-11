@@ -53,4 +53,7 @@ $txt['lc_24_hr_format_desc'] = 'Need to work on this';
 
 $txt['lc_submit'] = 'Submit';
 
+$txt['lc_timezone_name'] = 'Timezone Name';
+$txt['lc_timezone_diff'] = 'Timezone Difference';
+
 ?>
