@@ -39,4 +39,13 @@ $txt['lc_admin_menu'] = 'Live Clock Admin';
 $txt['lc_admin_panel'] = 'Live Clock admin panel';
 $txt['lc_general_desc'] = 'This is the admin panel for the Live Clock mod.';
 
+$txt['lc_mod_enable'] = 'Enable Live Clock mod';
+$txt['lc_mod_enable_desc'] = 'Global permission to enable/disable mod';
+$txt['lc_forum_timezone_offset'] = 'Use Forum Timezone';
+$txt['lc_forum_timezone_offset_desc'] = 'Enabling this option will use user timezone offset placed by forum. This is not correct for some zones. E.g India';
+$txt['lc_24_hr_format'] = 'Use 24hr format';
+$txt['lc_24_hr_format_desc'] = 'Need to work on this';
+
+$txt['lc_submit'] = 'Submit';
+
 ?>

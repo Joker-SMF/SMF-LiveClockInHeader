@@ -24,7 +24,7 @@
 		<remove-file name="$sourcedir/LiveClock.php" />
 		<remove-file name="$themedir/scripts/LiveClock.js" />
 		<remove-file name="$languagedir/LiveClock.english.php" />
-		<modification>Modification.xml</modification>
+		<modification reverse="true">Modification.xml</modification>
 		<redirect url="$scripturl?action=admin;area=packages;sa=browse" timeout="1000" />		
 	</uninstall>
 </package-info>

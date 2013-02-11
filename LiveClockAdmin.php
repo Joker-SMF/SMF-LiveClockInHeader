@@ -34,19 +34,21 @@ if (!defined('SMF'))
 	die('Hacking attempt...');
 
 loadLanguage('LiveClock');
+loadtemplate('LiveClock');
 
 function LiveClockAdminPanel($return_config = false) {
 	global $txt, $scripturl, $context, $sourcedir;
 
 	/* I can has Adminz? */
 	isAllowedTo('admin_forum');
-	loadtemplate('LiveClock');
+	//loadtemplate('LiveClock');
 
 	$context['page_title'] = $txt['lc_admin_panel'];
-	$default_action_func = 'basicLiveClockSettings';
+	$default_action_func = 'LC_basicLiveClockSettings';
 
 	$subActions = array(
-		'basicsettings' => 'basicLiveClockSettings',
+		'basicsettings' => 'LC_basicLiveClockSettings',
+		'savebasicsettings' => 'LC_savebasicsettings',
 	);
 
 	//wakey wakey, call the func you lazy
@@ -55,11 +57,40 @@ function LiveClockAdminPanel($return_config = false) {
 	$default_action_func();
 }
 
-function basicLiveClockSettings() {
+function LC_basicLiveClockSettings() {
 	global $txt, $scripturl, $context, $sourcedir, $user_info;
 
 	/* I can has Adminz? */
 	isAllowedTo('admin_forum');
+
+	require_once($sourcedir . '/ManageServer.php');
+	$general_settings = array(
+		array('check', 'lc_mod_enable', 'subtext' => $txt['lc_mod_enable_desc']),
+		array('check', 'lc_forum_timezone_offset', 'subtext' => $txt['lc_forum_timezone_offset_desc']),
+		array('check', 'lc_24_hr_format', 'subtext' => $txt['lc_24_hr_format_desc']),
+	);
+
+	$context['page_title'] = $txt['lc_admin_panel'];
+	$context['sub_template'] = 'lc_admin_basic_setting_panel';
+	prepareDBSettingContext($general_settings);
+}
+
+function LC_savebasicsettings() {
+	global $context, $sourcedir;
+
+	if (isset($_POST['submit'])) {
+		checkSession();
+
+		$general_settings = array(
+			array('check', 'lc_mod_enable'),
+			array('check', 'lc_forum_timezone_offset'),
+			array('check', 'lc_24_hr_format'),
+		);
+
+		require_once($sourcedir . '/ManageServer.php');
+		saveDBSettings($general_settings);
+		redirectexit('action=admin;area=liveclock;sa=basicsettings');
+	}
 }
 
 ?>

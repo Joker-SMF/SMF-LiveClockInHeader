@@ -30,8 +30,48 @@
 *
 */
 
-function template_LC_admin_info() {
+function template_lc_admin_basic_setting_panel()
+{
 	global $context, $txt, $scripturl;
+
+	//template_rp_admin_info();
+
+	echo '
+	<div id="admincenter">
+		<form action="'. $scripturl .'?action=admin;area=liveclock;sa=savegeneralsettings" method="post" accept-charset="UTF-8">
+			<div class="windowbg2">
+				<span class="topslice"><span></span></span>
+					<div class="content">';
+	
+					foreach ($context['config_vars'] as $config_var) {
+						echo '
+						<dl class="settings">
+							<dt>
+								<span>'. $txt[$config_var['name']] .'</span>';
+								if (isset($config_var['subtext']) && !empty($config_var['subtext'])) {
+									echo '
+									<br /><span class="smalltext">', $config_var['subtext'] ,'</span>';
+								}
+							echo '
+							</dt>
+							<dd>
+								<input type="checkbox" name="', $config_var['name'], '" id="', $config_var['name'], '"', ($config_var['value'] ? ' checked="checked"' : ''), ' value="1" class="input_check" />
+							</dd>
+						</dl>';
+					}
+	
+					echo '
+					<input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '" />
+					<input type="submit" name="submit" value="', $txt['lc_submit'], '" tabindex="', $context['tabindex']++, '" class="button_submit" />';
+		
+					echo '
+					</div>
+				<span class="botslice"><span></span></span>
+			</div>
+	
+		</form>
+	</div>
+	<br class="clear">';
 }
 
 ?>
