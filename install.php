@@ -30,8 +30,10 @@
 *
 */
 
-add_integration_function('integrate_pre_include', '$sourcedir/LiveClock.php');
+add_integration_function('integrate_pre_include', '$sourcedir/LiveClockHooks.php');
+add_integration_function('integrate_admin_areas', 'LC_addAdminPanel');
 add_integration_function('integrate_actions', 'LC_addAction', true);
+
 
 if (SMF == 'SSI')
 	echo 'Database adaptation successful!';

@@ -34,4 +34,9 @@ global $txt;
 
 $txt['LC_loading'] = 'Loading...';
 
+// Admin panel strings
+$txt['lc_admin_menu'] = 'Live Clock Admin';
+$txt['lc_admin_panel'] = 'Live Clock admin panel';
+$txt['lc_general_desc'] = 'This is the admin panel for the Live Clock mod.';
+
 ?>

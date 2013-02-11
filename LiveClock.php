@@ -35,12 +35,6 @@ if (!defined('SMF'))
 
 loadLanguage('LiveClock');
 
-function LC_addAction(&$actionArray) {
-	global $context;
-
-	$actionArray['liveclock'] = array('LiveClock.php', 'LC_mainIndex');
-}
-
 function LC_mainIndex() {
 	global $context;
 
