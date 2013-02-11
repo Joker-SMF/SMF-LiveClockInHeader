@@ -38,8 +38,10 @@
 
 	<file name="$themedir/index.template.php">
 		<operation>
-			<search position="after"><![CDATA[]]></search>
-			<add><![CDATA[]]></add>
+			<search position="replace"><![CDATA[<li>', $context['current_time'], '</li>]]></search>
+			<add><![CDATA[<li id="live_clock">', $txt['LC_loading'],'</li>';
+					LC_showClock();
+		echo ']]></add>
 		</operation>
 	</file>
 </modification>

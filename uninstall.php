@@ -39,6 +39,6 @@ elseif (!defined('SMF'))
 	die('<b>Error:</b> Cannot uninstall - please verify you put this in the same place as SMF\'s index.php.');
 
 remove_integration_function('integrate_pre_include', '$sourcedir/LiveClock.php');
-remove_integration_function('integrate_buffer', 'live_clock_ob');
+remove_integration_function('integrate_actions', 'LC_addAction');
 
 ?>

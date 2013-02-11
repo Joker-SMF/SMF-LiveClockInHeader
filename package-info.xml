@@ -10,13 +10,17 @@
 		<readme type="file" parsebbc="true">readme.txt</readme>
 		<database>install.php</database>
 		<require-file name="LiveClock.english.php" destination="$languagedir" />
+		<require-file name="LiveClock.js" destination="$themedir/scripts" />
 		<require-file name="LiveClock.php" destination="$sourcedir" />
+		<modification>Modification.xml</modification>
 	</install>
 
 	<uninstall for="2.0 - 2.0.99">
 		<code>uninstall.php</code>
 		<remove-file name="$sourcedir/LiveClock.php" />
+		<remove-file name="$themedir/scripts/LiveClock.js" />
 		<remove-file name="$languagedir/LiveClock.english.php" />
+		<modification>Modification.xml</modification>
 		<redirect url="$scripturl?action=admin;area=packages;sa=browse" timeout="1000" />		
 	</uninstall>
 </package-info>

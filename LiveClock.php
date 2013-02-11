@@ -35,13 +35,38 @@ if (!defined('SMF'))
 
 loadLanguage('LiveClock');
 
-function LC_addAction(&$actionArray)
-{
+function LC_addAction(&$actionArray) {
+	global $context;
+
 	$actionArray['liveclock'] = array('LiveClock.php', 'LC_mainIndex');
 }
 
 function LC_mainIndex() {
-	echo 'LC_mainIndex called';
+	global $context;
+
+	$default_action_func = 'showClock';
+	$subActions = array(
+		'showclock' => 'LC_showClock',
+	);
+
+	if (isset($_REQUEST['sa']) && isset($subActions[$_REQUEST['sa']]) && function_exists($subActions[$_REQUEST['sa']]))
+		return $subActions[$key]();
+	$default_action_func();
+}
+
+function LC_showClock() {
+	global $context, $settings, $user_info;
+
+	echo '
+		<script type="text/javascript" src="', $settings['default_theme_url'], '/scripts/LiveClock.js"></script>
+		
+		<script type="text/javascript">
+			//lets make params
+			var params = {
+				timezone : "' . $user_info['time_offset'] . '"
+			}
+			refrClock(params)
+		</script>';
 }
 
 ?>

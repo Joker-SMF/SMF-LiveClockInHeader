@@ -32,4 +32,6 @@
 
 global $txt;
 
+$txt['LC_loading'] = 'Loading...';
+
 ?>
