@@ -38,10 +38,20 @@
 
 	<file name="$themedir/index.template.php">
 		<operation>
-			<search position="replace"><![CDATA[<li>', $context['current_time'], '</li>]]></search>
-			<add><![CDATA[<li id="live_clock">', $txt['LC_loading'],'</li>';
+			<search position="replace"><![CDATA[echo '
+					<li>', $context['current_time'], '</li>
+				</ul>';]]></search>
+			<add><![CDATA[if(!empty($modSettings['lc_mod_enable'])) {
+			echo '
+					<li id="live_clock">', $txt['LC_loading'],'</li>';
 					LC_showClock();
-		echo ']]></add>
+			echo '
+				</ul>';	
+		} else {
+			echo '
+					<li>', $context['current_time'], '</li>
+				</ul>';
+		}]]></add>
 		</operation>
 	</file>
 </modification>

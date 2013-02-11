@@ -13,6 +13,7 @@
 		<require-file name="LiveClockAdmin.php" destination="$sourcedir" />
 		<require-file name="LiveClock.php" destination="$sourcedir" />
 		<require-file name="LiveClock.english.php" destination="$languagedir" />
+		<require-file name="LiveClock.template.php" destination="$themedir" />
 		<require-file name="LiveClock.js" destination="$themedir/scripts" />
 		<modification>Modification.xml</modification>
 	</install>
@@ -22,8 +23,9 @@
 		<remove-file name="$sourcedir/LiveClockHooks.php" />
 		<remove-file name="$sourcedir/LiveClockAdmin.php" />
 		<remove-file name="$sourcedir/LiveClock.php" />
-		<remove-file name="$themedir/scripts/LiveClock.js" />
 		<remove-file name="$languagedir/LiveClock.english.php" />
+		<remove-file name="$themedir/LiveClock.template.php" />
+		<remove-file name="$themedir/scripts/LiveClock.js" />
 		<modification reverse="true">Modification.xml</modification>
 		<redirect url="$scripturl?action=admin;area=packages;sa=browse" timeout="1000" />		
 	</uninstall>

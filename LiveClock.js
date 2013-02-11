@@ -12,7 +12,6 @@
 */
 
 function refrClock(params) {
-	console.log('called')
 	var docId = document.getElementById('live_clock');
 	if(!docId) {
 		setTimeout(function() {
@@ -21,32 +20,44 @@ function refrClock(params) {
 		return;
 	}
 
-	var offset = Math.abs(new Date().getTimezoneOffset()/60);
+	if(params == undefined) {
+		return;
+	}
+	if(params.timezone === '' || params.timezone === undefined) {
+		var offset = Math.abs(new Date().getTimezoneOffset()/60);	
+	} else {
+		var offset = params.timezone;
+	}
+
+	var user24hrFormat = (params.use24hrFormat == 'true') ? true : false;
 	d = new Date();
-	//console.log(offset + ' : ' + params.timezone)
-	offset = params.timezone;
 	utc = d.getTime() + (d.getTimezoneOffset() * 60000);
 	nd = new Date(utc + (3600000 *+ offset));
-	var s = nd.getSeconds();
-	var m = nd.getMinutes();
-	var h = nd.getHours();
-	var am_pm;
+
+	var s = nd.getSeconds(),
+		m = nd.getMinutes(),
+		h = nd.getHours();
+	if(user24hrFormat) var am_pm;
+
 	if (s < 10) {
 		s = '0' + s;
 	}
 	if (m < 10) {
 		m ='0' + m;
 	}
-	if (h > 12) {
-		h = h - 12;
-		am_pm = 'pm'
-	} else {
-		am_pm = 'am';
+	if(user24hrFormat) {
+		if (h > 12) {
+			h = h - 12;
+			am_pm = 'pm'
+		} else {
+			am_pm = 'am';
+		}	
 	}
 	if (h < 10) {
 		h= '0' + h;
 	}
-	var time = h + ':' + m + ':' + s + am_pm;
+	if(user24hrFormat) var time = h + ':' + m + ':' + s + am_pm;
+	else var time = h + ':' + m + ':' + s;
 	docId.innerHTML= time;
 	setTimeout("refrClock(params)",1000);
 }

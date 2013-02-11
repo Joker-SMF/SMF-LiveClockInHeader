@@ -38,7 +38,7 @@ function template_lc_admin_basic_setting_panel()
 
 	echo '
 	<div id="admincenter">
-		<form action="'. $scripturl .'?action=admin;area=liveclock;sa=savegeneralsettings" method="post" accept-charset="UTF-8">
+		<form action="'. $scripturl .'?action=admin;area=liveclock;sa=savebasicsettings" method="post" accept-charset="UTF-8">
 			<div class="windowbg2">
 				<span class="topslice"><span></span></span>
 					<div class="content">';

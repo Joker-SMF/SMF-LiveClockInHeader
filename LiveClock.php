@@ -44,20 +44,23 @@ function LC_mainIndex() {
 	);
 
 	if (isset($_REQUEST['sa']) && isset($subActions[$_REQUEST['sa']]) && function_exists($subActions[$_REQUEST['sa']]))
-		return $subActions[$key]();
+		return $subActions[$_REQUEST['sa']]();
 	$default_action_func();
 }
 
 function LC_showClock() {
-	global $context, $settings, $user_info;
+	global $context, $modSettings, $settings, $user_info;
+
+	$timezone = !empty($modSettings['lc_forum_timezone_offset']) ? $user_info['time_offset'] : '';
+	$hour_format = !empty($modSettings['lc_24_hr_format']) ? 'true' : 'false';
 
 	echo '
 		<script type="text/javascript" src="', $settings['default_theme_url'], '/scripts/LiveClock.js"></script>
-		
 		<script type="text/javascript">
 			//lets make params
 			var params = {
-				timezone : "' . $user_info['time_offset'] . '"
+				timezone : "'. $timezone .'",
+				use24hrFormat : "'. $hour_format .'"
 			}
 			refrClock(params)
 		</script>';

@@ -41,7 +41,6 @@ function LiveClockAdminPanel($return_config = false) {
 
 	/* I can has Adminz? */
 	isAllowedTo('admin_forum');
-	//loadtemplate('LiveClock');
 
 	$context['page_title'] = $txt['lc_admin_panel'];
 	$default_action_func = 'LC_basicLiveClockSettings';
@@ -53,7 +52,7 @@ function LiveClockAdminPanel($return_config = false) {
 
 	//wakey wakey, call the func you lazy
 	if (isset($_REQUEST['sa']) && isset($subActions[$_REQUEST['sa']]) && function_exists($subActions[$_REQUEST['sa']]))
-		return $subActions[$key]();
+		return $subActions[$_REQUEST['sa']]();
 	$default_action_func();
 }
 
