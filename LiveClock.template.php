@@ -30,11 +30,50 @@
 *
 */
 
+function template_lc_admin_info() {
+	global $context, $txt, $scripturl;
+
+	echo '
+	<div class="cat_bar">
+		<h3 class="catbg">
+			<span class="ie6_header floatleft">', $txt['lc_admin_panel'] ,'</span>
+		</h3>
+	</div>
+	<p class="windowbg description">', isset($context['live_clock']['tab_desc']) ? $context['live_clock']['tab_desc'] : $txt['lc_general_desc'] ,'</p>';
+	
+	// The admin tabs.
+		echo '
+	<div id="adm_submenus">
+		<ul class="dropmenu">';
+	
+		// Print out all the items in this tab.
+		$menu_buttons = $context[$context['admin_menu_name']]['tab_data'];
+		foreach ($menu_buttons['tabs'] as $sa => $tab)
+		{
+			echo '
+			<li>
+				<a class="', ($menu_buttons['active_button'] == $tab['url']) ? 'active ' : '', 'firstlevel" href="', $scripturl, '?action=admin;area=liveclock;sa=', $tab['url'],'"><span class="firstlevel">', $tab['label'], '</span></a>
+			</li>';
+		}
+	
+		// the end of tabs
+		echo '
+		</ul>
+	</div><br class="clear" />';
+
+	echo '
+	<div class="cat_bar">
+		<h3 class="catbg">
+			', $context['live_clock']['tab_name'] ,'
+		</h3>
+	</div>';
+}
+
 function template_lc_admin_basic_setting_panel()
 {
 	global $context, $txt, $scripturl;
 
-	//template_rp_admin_info();
+	template_lc_admin_info();
 
 	echo '
 	<div id="admincenter">

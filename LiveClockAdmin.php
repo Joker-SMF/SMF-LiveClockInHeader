@@ -45,9 +45,26 @@ function LiveClockAdminPanel($return_config = false) {
 	$context['page_title'] = $txt['lc_admin_panel'];
 	$default_action_func = 'LC_basicLiveClockSettings';
 
+	$context[$context['admin_menu_name']]['tab_data'] = array(
+		'title' => $txt['lc_admin_panel'],
+		'tabs' => array(
+			'basicsettings' => array(
+				'label' => $txt['lc_basic_settings'],
+				'url' => 'basicsettings',
+			),
+			'timezones' => array(
+				'label' => $txt['lc_timezone_settings'],
+				'url' => 'displaytimezones',
+			),
+		),
+	);
+	$context[$context['admin_menu_name']]['tab_data']['active_button'] = isset($_REQUEST['sa']) ? $_REQUEST['sa'] : 'basicsettings';
+
 	$subActions = array(
 		'basicsettings' => 'LC_basicLiveClockSettings',
-		'savebasicsettings' => 'LC_savebasicsettings',
+		'savebasicsettings' => 'LC_saveBasicSettings',
+		'displaytimezones' => 'LC_displayTimezones',
+		'savetimezones' => 'LC_saveTimezones'
 	);
 
 	//wakey wakey, call the func you lazy
@@ -71,10 +88,12 @@ function LC_basicLiveClockSettings() {
 
 	$context['page_title'] = $txt['lc_admin_panel'];
 	$context['sub_template'] = 'lc_admin_basic_setting_panel';
+	$context['live_clock']['tab_name'] = $txt['lc_basic_settings'];
+	$context['live_clock']['tab_desc'] = $txt['lc_basic_settings_desc'];
 	prepareDBSettingContext($general_settings);
 }
 
-function LC_savebasicsettings() {
+function LC_saveBasicSettings() {
 	global $context, $sourcedir;
 
 	if (isset($_POST['submit'])) {
@@ -90,6 +109,10 @@ function LC_savebasicsettings() {
 		saveDBSettings($general_settings);
 		redirectexit('action=admin;area=liveclock;sa=basicsettings');
 	}
+}
+
+function LC_displayTimezones() {
+	global $context, $sourcedir;
 }
 
 ?>

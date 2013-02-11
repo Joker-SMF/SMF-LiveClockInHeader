@@ -30,6 +30,56 @@
 *
 */
 
+global $smcFunc, $db_prefix;
+
+if (!array_key_exists('db_add_column', $smcFunc))
+db_extend('packages');
+
+$table = array(
+	'table_name' => 'live_clock_timezones',
+	'columns' => array(
+		array(
+			'name' => 'id_zone',
+			'type' => 'smallint',
+			'unsigned' => true,
+			'size' => 5,
+            'auto' => true,
+		),
+		array(
+			'name' => 'zone_name',
+			'type' => 'varchar',
+			'size' => 255,
+			'default' => '',
+		),
+		array(
+			'name' => 'zone_diff',
+			'type' => 'varchar',
+			'size' => 255,
+			'default' => '0',
+		),
+	),
+	'indexes' => array(
+        array(
+            'type' => 'primary',
+            'columns' => array('id_zone'),
+        ),
+    ),
+);
+$smcFunc['db_create_table']('{db_prefix}' . $table['table_name'], $table['columns'], $table['indexes']);
+
+$general_settings = array(
+	'lc_mod_enable' => 0,
+    'lc_forum_timezone_offset' => 0,
+    'lc_24_hr_format' => 0,
+);
+
+foreach ($general_settings as $key => $value) {
+    $smcFunc['db_insert']('ignore',
+        '{db_prefix}settings', array('variable' => 'string', 'value' => 'string'),
+        array($key, $value), ''
+    );
+}
+
 add_integration_function('integrate_pre_include', '$sourcedir/LiveClockHooks.php');
 add_integration_function('integrate_admin_areas', 'LC_addAdminPanel');
 add_integration_function('integrate_actions', 'LC_addAction', true);

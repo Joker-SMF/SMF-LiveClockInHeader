@@ -39,6 +39,11 @@ $txt['lc_admin_menu'] = 'Live Clock Admin';
 $txt['lc_admin_panel'] = 'Live Clock admin panel';
 $txt['lc_general_desc'] = 'This is the admin panel for the Live Clock mod.';
 
+$txt['lc_basic_settings'] = 'Basic Settings';
+$txt['lc_basic_settings_desc'] = 'This section allows you to handle global settings for the mod.';
+$txt['lc_timezone_settings'] = 'Different TimeZones';
+$txt['lc_timezone_settings_desc'] = 'Section specifically made to add/modifiy timezones. All zones are based on GMT';
+
 $txt['lc_mod_enable'] = 'Enable Live Clock mod';
 $txt['lc_mod_enable_desc'] = 'Global permission to enable/disable mod';
 $txt['lc_forum_timezone_offset'] = 'Use Forum Timezone';
