@@ -54,15 +54,19 @@ function LC_showClock() {
 	$timezone = !empty($modSettings['lc_forum_timezone_offset']) ? $user_info['time_offset'] : '';
 	$hour_format = !empty($modSettings['lc_24_hr_format']) ? 'true' : 'false';
 
+	require_once('Subs-LiveClock.php');
+	$context['live_clock_timezones'] = LC_getALlTimeZones();
+
 	echo '
 		<script type="text/javascript" src="', $settings['default_theme_url'], '/scripts/LiveClock.js"></script>
 		<script type="text/javascript">
 			//lets make params
 			var params = {
 				timezone : "'. $timezone .'",
-				use24hrFormat : "'. $hour_format .'"
+				use24hrFormat : "'. $hour_format .'",
+				timezoneoptions: '. json_encode($context['live_clock_timezones']) .',
 			}
-			refrClock(params)
+			liveClock.initialize(params)
 		</script>';
 }
 

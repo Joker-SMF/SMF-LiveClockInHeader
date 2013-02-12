@@ -5,13 +5,11 @@
  * time string (decided by admin/mod default/type used by forum)
 */
 
-/*
- * Work left
- * use jquery
- * show dropdown for timezone (ummm bounceee effectee)?
-*/
+liveClock = {};
+liveClock.userTimeZone = '';
 
-function refrClock(params) {
+liveClock.initialize = function (params) {
+	//console.log(params);
 	var docId = document.getElementById('live_clock');
 	if(!docId) {
 		setTimeout(function() {
@@ -23,10 +21,14 @@ function refrClock(params) {
 	if(params == undefined) {
 		return;
 	}
-	if(params.timezone === '' || params.timezone === undefined) {
-		var offset = Math.abs(new Date().getTimezoneOffset()/60);	
-	} else {
+	
+	var timezoneOptions = (params.timezoneoptions) ? params.timezoneoptions : {};
+	if(params.timezone !== '' && params.timezone !== undefined && params.timezone !== null) {
 		var offset = params.timezone;
+	} else if (liveClock.userTimeZone !== '') {
+		var offset = liveClock.userTimeZone;
+	} else {
+		var offset = Math.abs(new Date().getTimezoneOffset()/60);
 	}
 
 	var user24hrFormat = (params.use24hrFormat == 'true') ? true : false;
@@ -59,5 +61,29 @@ function refrClock(params) {
 	if(user24hrFormat) var time = h + ':' + m + ':' + s + am_pm;
 	else var time = h + ':' + m + ':' + s;
 	docId.innerHTML= time;
-	setTimeout("refrClock(params)",1000);
+
+	var sel = document.getElementById('live_clock_timezone_options');
+	var items = sel.getElementsByTagName('option');
+
+	if(items.length !== Object.keys(timezoneOptions).length) {
+		var opt = null;
+		if(Object.keys(timezoneOptions).length > 0) {
+			for(i in timezoneOptions) {
+				var zone_diff = parseFloat(timezoneOptions[i].zone_diff)
+				opt = document.createElement('option');
+				opt.id = timezoneOptions[i].id_zone;
+				opt.value = zone_diff;
+				opt.innerHTML = timezoneOptions[i].zone_name;
+				if(zone_diff == offset) {
+					opt.selected = 'selected';
+				}
+				sel.appendChild(opt);
+			}
+		}	
+	}	
+	setTimeout("liveClock.initialize(params)",1000);
+}
+
+liveClock.onTimezoneChange = function(zone) {
+	liveClock.userTimeZone = zone;
 }
