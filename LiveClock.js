@@ -5,8 +5,13 @@
  * time string (decided by admin/mod default/type used by forum)
 */
 
-liveClock = {};
-liveClock.userTimeZone = '';
+var liveClock = {
+	userTimeZone : null,
+	allTimeZones : null,
+	timeoutCounter: null,
+	paramsObj : null,
+};
+
 
 liveClock.initialize = function (params) {
 	var docId = document.getElementById('live_clock');
@@ -20,8 +25,8 @@ liveClock.initialize = function (params) {
 	if(params == undefined) {
 		return;
 	}
-	
-	var timezoneOptions = (params.timezoneoptions) ? params.timezoneoptions : {};
+
+	liveClock.allTimeZones = (params.timezoneoptions) ? params.timezoneoptions : {};
 	if(params.timezone !== '' && params.timezone !== undefined && params.timezone !== null) {
 		var offset = params.timezone;
 	} else if (liveClock.userTimeZone !== '') {
@@ -30,6 +35,7 @@ liveClock.initialize = function (params) {
 		var offset = Math.abs(new Date().getTimezoneOffset()/60);
 	}
 
+	liveClock.paramsObj = params;
 	var user24hrFormat = (params.use24hrFormat == 'true') ? true : false;
 	d = new Date();
 	utc = d.getTime() + (d.getTimezoneOffset() * 60000);
@@ -64,14 +70,14 @@ liveClock.initialize = function (params) {
 	var sel = document.getElementById('live_clock_timezone_options');
 	var items = sel.getElementsByTagName('option');
 
-	if(items.length !== Object.keys(timezoneOptions).length) {
+	if(items.length !== Object.keys(liveClock.allTimeZones).length) {
 		var opt = null;
-		if(Object.keys(timezoneOptions).length > 0) {
-			for(i in timezoneOptions) {
-				var zone_diff = parseFloat(timezoneOptions[i].zone_diff)
+		if(Object.keys(liveClock.allTimeZones).length > 0) {
+			for(i in liveClock.allTimeZones) {
+				var zone_diff = parseFloat(liveClock.allTimeZones[i].zone_diff);
 				opt = document.createElement('option');
-				opt.value = timezoneOptions[i].id_zone;
-				opt.innerHTML = timezoneOptions[i].zone_name;
+				opt.value = liveClock.allTimeZones[i].id_zone;
+				opt.innerHTML = liveClock.allTimeZones[i].zone_name;
 				if(zone_diff == offset) {
 					opt.selected = 'selected';
 				}
@@ -79,7 +85,7 @@ liveClock.initialize = function (params) {
 			}
 		}	
 	}	
-	setTimeout("liveClock.initialize(params)",1000);
+	liveClock.timeoutCounter = setTimeout("liveClock.initialize(liveClock.paramsObj)",1000);
 }
 
 liveClock.onTimezoneChange = function(zone) {
@@ -89,8 +95,15 @@ liveClock.onTimezoneChange = function(zone) {
 		timezone: zone
 	}, function(data, textStatus, jqXHR) {
 		// use data here
-		if(textStatus.toLowerCase() == 'success') {
-			liveClock.userTimeZone = zone;
+		for(i in liveClock.allTimeZones) {
+			var id_zone = liveClock.allTimeZones[i].id_zone;
+			var zone_diff = parseFloat(liveClock.allTimeZones[i].zone_diff);
+			if(id_zone == zone) {
+				console.log('match')
+				liveClock.paramsObj.timezone = zone_diff;
+			}
 		}
+		clearTimeout(liveClock.timeoutCounter);
+		liveClock.timeoutCounter = setTimeout("liveClock.initialize(liveClock.paramsObj)",1000);
 	});
 }
