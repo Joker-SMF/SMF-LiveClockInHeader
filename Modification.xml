@@ -45,7 +45,9 @@
 			echo '
 					<li id="live_clock">', $txt['LC_loading'],'</li>
 					<select id="live_clock_timezone_options" onChange="liveClock.onTimezoneChange(this.value)"></select>';
-					LC_mainIndex();
+					if(function_exists('LC_mainIndex')) {
+						LC_mainIndex();
+					}
 			echo '
 				</ul>';	
 		} else {

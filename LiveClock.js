@@ -99,7 +99,6 @@ liveClock.onTimezoneChange = function(zone) {
 			var id_zone = liveClock.allTimeZones[i].id_zone;
 			var zone_diff = parseFloat(liveClock.allTimeZones[i].zone_diff);
 			if(id_zone == zone) {
-				console.log('match')
 				liveClock.paramsObj.timezone = zone_diff;
 			}
 		}
