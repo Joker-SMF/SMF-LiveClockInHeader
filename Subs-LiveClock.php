@@ -57,4 +57,8 @@ function LC_getALlTimeZones() {
 	return $timezones;
 }
 
+function LC_updateUserDBZone($timezoneVal = '') {
+	global $smcFunc, $user_info;
+}
+
 ?>

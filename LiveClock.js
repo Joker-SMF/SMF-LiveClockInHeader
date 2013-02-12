@@ -67,6 +67,7 @@ liveClock.initialize = function (params) {
 
 	if(items.length !== Object.keys(timezoneOptions).length) {
 		var opt = null;
+		console.log(timezoneOptions);
 		if(Object.keys(timezoneOptions).length > 0) {
 			for(i in timezoneOptions) {
 				var zone_diff = parseFloat(timezoneOptions[i].zone_diff)
@@ -85,5 +86,15 @@ liveClock.initialize = function (params) {
 }
 
 liveClock.onTimezoneChange = function(zone) {
-	liveClock.userTimeZone = zone;
+	$.post('index.php', {
+		action : 'liveclock',
+		sa : 'updateusertimezone',
+		
+	}, function(data, textStatus, jqXHR) {
+		if(textStatus.toLowerCase() == 'success') {
+			liveClock.userTimeZone = zone;
+		}
+		console.log(textStatus);
+		console.log(jqXHR);
+	});
 }

@@ -38,9 +38,12 @@ loadLanguage('LiveClock');
 function LC_mainIndex() {
 	global $context;
 
-	$default_action_func = 'showClock';
+	echo'<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>';
+
+	$default_action_func = 'LC_showClock';
 	$subActions = array(
 		'showclock' => 'LC_showClock',
+		'updateusertimezone' => 'LC_updateUserTimezone'
 	);
 
 	if (isset($_REQUEST['sa']) && isset($subActions[$_REQUEST['sa']]) && function_exists($subActions[$_REQUEST['sa']]))
@@ -68,6 +71,17 @@ function LC_showClock() {
 			}
 			liveClock.initialize(params)
 		</script>';
+}
+
+function LC_updateUserTimezone() {
+	global $context, $sourcedir;
+
+	$context['sub_template'] = 'reorderboards_xml';
+	require_once('Subs-LiveClock.php');
+	$result = LC_updateUserDBZone($timezoneVal);
+	$response = array( 'success' => false);
+	echo json_encode( $response );
+	die();
 }
 
 ?>
