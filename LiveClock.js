@@ -9,7 +9,6 @@ liveClock = {};
 liveClock.userTimeZone = '';
 
 liveClock.initialize = function (params) {
-	//console.log(params);
 	var docId = document.getElementById('live_clock');
 	if(!docId) {
 		setTimeout(function() {
@@ -67,13 +66,11 @@ liveClock.initialize = function (params) {
 
 	if(items.length !== Object.keys(timezoneOptions).length) {
 		var opt = null;
-		console.log(timezoneOptions);
 		if(Object.keys(timezoneOptions).length > 0) {
 			for(i in timezoneOptions) {
 				var zone_diff = parseFloat(timezoneOptions[i].zone_diff)
 				opt = document.createElement('option');
-				opt.id = timezoneOptions[i].id_zone;
-				opt.value = zone_diff;
+				opt.value = timezoneOptions[i].id_zone;
 				opt.innerHTML = timezoneOptions[i].zone_name;
 				if(zone_diff == offset) {
 					opt.selected = 'selected';
@@ -87,14 +84,13 @@ liveClock.initialize = function (params) {
 
 liveClock.onTimezoneChange = function(zone) {
 	$.post('index.php', {
-		action : 'liveclock',
-		sa : 'updateusertimezone',
-		
+		action: 'liveclock',
+		sa: 'updateusertimezone',
+		timezone: zone
 	}, function(data, textStatus, jqXHR) {
+		// use data here
 		if(textStatus.toLowerCase() == 'success') {
 			liveClock.userTimeZone = zone;
 		}
-		console.log(textStatus);
-		console.log(jqXHR);
 	});
 }

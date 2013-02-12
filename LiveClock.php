@@ -36,7 +36,7 @@ if (!defined('SMF'))
 loadLanguage('LiveClock');
 
 function LC_mainIndex() {
-	global $context;
+	global $context, $user_info;
 
 	echo'<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>';
 
@@ -54,10 +54,17 @@ function LC_mainIndex() {
 function LC_showClock() {
 	global $context, $modSettings, $settings, $user_info;
 
-	$timezone = !empty($modSettings['lc_forum_timezone_offset']) ? $user_info['time_offset'] : '';
-	$hour_format = !empty($modSettings['lc_24_hr_format']) ? 'true' : 'false';
-
 	require_once('Subs-LiveClock.php');
+	if(!$user_info['is_guest']) {
+		$user_info['custom_timezone'] = LC_getUserTimezone();
+	}
+
+	if(isset($user_info['custom_timezone']) && !empty($user_info['custom_timezone'])) {
+		$timezone = $user_info['custom_timezone'];
+	} else {
+		$timezone = !empty($modSettings['lc_forum_timezone_offset']) ? $user_info['time_offset'] : '';
+	}
+	$hour_format = !empty($modSettings['lc_24_hr_format']) ? 'true' : 'false';
 	$context['live_clock_timezones'] = LC_getALlTimeZones();
 
 	echo '
@@ -74,14 +81,32 @@ function LC_showClock() {
 }
 
 function LC_updateUserTimezone() {
-	global $context, $sourcedir;
+	global $context, $sourcedir, $user_info;
 
-	$context['sub_template'] = 'reorderboards_xml';
+	$resp_fail = array('response' => false);
+	$resp_pass = array('response' => true);
+
+	if($user_info['is_guest']) {
+		echo json_encode($resp_fail);
+		die();	
+	}
+
+	if(!isset($_REQUEST['timezone']) || empty($_REQUEST['timezone'])) {
+		echo json_encode($resp_fail);
+		die();
+	}
+
+	$timezoneVal = (int) $_REQUEST['timezone'];
+
 	require_once('Subs-LiveClock.php');
 	$result = LC_updateUserDBZone($timezoneVal);
-	$response = array( 'success' => false);
-	echo json_encode( $response );
-	die();
+	if($result) {
+		echo json_encode($resp_pass);
+		die();
+	} else {
+		echo json_encode($resp_fail);
+		die();
+	}
 }
 
 ?>

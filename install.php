@@ -35,37 +35,67 @@ global $smcFunc, $db_prefix;
 if (!array_key_exists('db_add_column', $smcFunc))
 db_extend('packages');
 
-$table = array(
-	'table_name' => 'live_clock_timezones',
-	'columns' => array(
-		array(
-			'name' => 'id_zone',
-			'type' => 'smallint',
-			'unsigned' => true,
-			'size' => 5,
-            'auto' => true,
-		),
-		array(
-			'name' => 'zone_name',
-			'type' => 'varchar',
-			'size' => 255,
-			'default' => '',
-		),
-		array(
-			'name' => 'zone_diff',
-			'type' => 'varchar',
-			'size' => 255,
-			'default' => '0',
-		),
-	),
-	'indexes' => array(
-        array(
-            'type' => 'primary',
-            'columns' => array('id_zone'),
+$tables = array(
+	'live_clock_timezones' => array(
+        'columns' => array(
+            array(
+                'name' => 'id_zone',
+                'type' => 'smallint',
+                'unsigned' => true,
+                'size' => 5,
+                'auto' => true,
+            ),
+            array(
+                'name' => 'zone_name',
+                'type' => 'varchar',
+                'size' => 255,
+                'default' => '',
+            ),
+            array(
+                'name' => 'zone_diff',
+                'type' => 'varchar',
+                'size' => 255,
+                'default' => '0',
+            ),
+        ),
+        'indexes' => array(
+            array(
+                'type' => 'primary',
+                'columns' => array('id_zone'),
+            ),
         ),
     ),
+    'live_clock_user_zone' => array(
+        'columns' => array(
+            array(
+                'name' => 'id_member',
+                'type' => 'mediumint',
+                'size' => 8,
+                'unsigned' => true,
+                'null' => false,
+                'default' => 0,
+            ),
+            array(
+                'name' => 'id_zone',
+                'type' => 'smallint',
+                'size' => 2,
+                'unsigned' => true,
+                'null' => false,
+                'default' => 0,
+            ),
+        ),
+        'indexes' => array(
+			array(
+				'type' => 'primary',
+				'columns' => array('id_member'),
+			),
+		),
+    )
 );
-$smcFunc['db_create_table']('{db_prefix}' . $table['table_name'], $table['columns'], $table['indexes']);
+
+foreach ($tables as $table => $data) {
+	$smcFunc['db_create_table']('{db_prefix}' . $table, $data['columns'], $data['indexes']);
+}
 
 $general_settings = array(
 	'lc_mod_enable' => 0,

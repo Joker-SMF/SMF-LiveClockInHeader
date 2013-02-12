@@ -57,8 +57,50 @@ function LC_getALlTimeZones() {
 	return $timezones;
 }
 
-function LC_updateUserDBZone($timezoneVal = '') {
+function LC_getUserTimezone()  {
 	global $smcFunc, $user_info;
+
+	if($user_info['is_guest']) {
+		return false;
+	}
+
+	$request = $smcFunc['db_query']('', '
+		SELECT ct.zone_diff
+		FROM {db_prefix}live_clock_user_zone as uz 
+		inner join {db_prefix}live_clock_timezones as ct on (uz.id_zone = ct.id_zone)
+		where uz.id_member = {int:id_member}
+		LIMIT 1',
+		array(
+			'id_member' => $user_info['id'],
+		)
+	);
+	if ($smcFunc['db_num_rows']($request) == 0)
+		return;
+
+	list ($zone_diff) = $smcFunc['db_fetch_row']($request);
+	$smcFunc['db_free_result']($request);
+	return $zone_diff;
+}
+
+function LC_updateUserDBZone($timezoneID = '') {
+	global $smcFunc, $user_info;
+
+	if(empty($timezoneID)) {
+		return false;
+	}
+	
+	if($user_info['is_guest']) {
+		return false;
+	}
+
+	$replaceArray[] = array($user_info['id'], $timezoneID);
+	$smcFunc['db_insert']('replace',
+		'{db_prefix}live_clock_user_zone',
+		array('id_member' => 'int', 'id_zone' => 'int'),
+		$replaceArray,
+		array('id_member')
+	);
+	return true;
 }
 
 ?>
