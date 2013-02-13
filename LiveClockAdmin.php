@@ -126,4 +126,66 @@ function LC_displayTimezones() {
 	$context['live_clock']['tab_desc'] = $txt['lc_timezone_settings_desc'];
 }
 
+function LC_saveTimezones() {
+	global $context, $sourcedir, $txt;
+
+	/* I can has Adminz? */
+	isAllowedTo('admin_forum');
+	require_once('Subs-LiveClock.php');
+
+	$data = array();
+	unset($_POST['submit']);
+	foreach ($_POST as $key => $value) {
+		$temp_data = explode('_', $key);
+
+		//if i found something fishy, you are going back
+		if (empty($temp_data[0]) || !is_numeric($temp_data[1])) {
+			return false;
+		}
+
+		$key_name = $temp_data[0];
+		$id_zone = (int) $temp_data[1];
+
+		if ($key_name === 'timezonename') {
+			if (isset($data[$id_zone])) {
+				$data[$key_value]['zone_name'] = $value;
+			} else {
+				$data[$id_zone] = array(
+					'zone_name' => $value,
+				);
+			}
+		} else if ($key_name === 'timezonediff') {
+			if (isset($data[$id_zone])) {
+				$data[$id_zone]['zone_diff'] =  $value;
+			} else {
+				$data[$key_value] = array(
+					'zone_diff' => $value,
+				);
+			}
+		}
+	}
+	
+	$sanitizedData = LC_sanitizeTimezoneDBData($data);
+	if (count($sanitizedData) == 0) {
+		redirectexit('action=admin;area=liveclock;sa=displaytimezones');
+	} else {
+		LC_updateTimeZones($sanitizedData);
+		redirectexit('action=admin;area=liveclock;sa=displaytimezones');
+	}
+}
+
+function LC_sanitizeTimezoneDBData($data = array()) {
+	global $context;
+	
+	if (!is_array($data))
+		return false;
+
+	foreach ($data as $key => $val) {
+		if (empty($val['zone_diff']) || empty($val['zone_name'])) {
+			unset($data[$key]);
+		}
+	}
+	return $data;
+}
+
 ?>

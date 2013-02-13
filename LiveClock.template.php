@@ -126,9 +126,9 @@ function template_lc_admin_timezone_setting_panel() {
 
 				foreach ($context['live_clock_timezones'] as $timezones) {
 					echo '
-					<input type="text" name="timezone_name_'. $timezones['id_zone'] .'" size="50" maxlength="255"  name="" value="', $timezones['zone_name'] ,'" class="input_text" placeholder="'. $txt['lc_timezone_name'] .'" />';
+					<input type="text" name="timezonename_'. $timezones['id_zone'] .'" size="50" maxlength="255"  name="" value="', $timezones['zone_name'] ,'" class="input_text" placeholder="'. $txt['lc_timezone_name'] .'" />';
 					echo '
-					<input type="text" name="timezone_diff_'. $timezones['id_zone'] .'" size="5" maxlength="5" name="" value="', $timezones['zone_diff'] ,'" class="input_text" placeholder="'. $txt['lc_timezone_diff'] .'" /><br />';
+					<input type="text" name="timezonediff_'. $timezones['id_zone'] .'" size="5" maxlength="5" name="" value="', $timezones['zone_diff'] ,'" class="input_text" placeholder="'. $txt['lc_timezone_diff'] .'" /><br />';
 				}
 
 				echo '

@@ -57,6 +57,39 @@ function LC_getALlTimeZones() {
 	return $timezones;
 }
 
+function LC_updateTimeZones($data = array()) {
+	global $smcFunc;
+
+	if (!is_array($data))
+		return false;
+
+	//Just empty the data and add new data
+	LC_clearAllTimezones();
+
+	foreach ($data as $val) {
+		$smcFunc['db_insert']('',
+			'{db_prefix}live_clock_timezones',
+			array(
+				'zone_name' => 'string', 'zone_diff' => 'string',
+			),
+			array(
+				$val['zone_name'], $val['zone_diff'],
+			),
+			array()
+		);
+	}
+}
+
+
+function LC_clearAllTimezones() {
+	global $smcFunc;
+
+	$smcFunc['db_query']('', '
+		DELETE FROM {db_prefix}live_clock_timezones',
+		array()
+	);
+}
+
 function LC_getUserTimezone()  {
 	global $smcFunc, $user_info;
 

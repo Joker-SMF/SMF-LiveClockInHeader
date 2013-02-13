@@ -6,18 +6,14 @@
 */
 
 var liveClock = {
-	userTimeZone : null,
-	allTimeZones : null,
-	timeoutCounter: null,
 	paramsObj : null,
 };
-
 
 liveClock.initialize = function (params) {
 	var docId = document.getElementById('live_clock');
 	if(!docId) {
 		setTimeout(function() {
-			refrClock();
+			liveClock.initialize(params);
 		},1000);
 		return;
 	}
@@ -26,17 +22,16 @@ liveClock.initialize = function (params) {
 		return;
 	}
 
-	liveClock.allTimeZones = (params.timezoneoptions) ? params.timezoneoptions : {};
-	if(params.timezone !== '' && params.timezone !== undefined && params.timezone !== null) {
-		var offset = params.timezone;
-	} else if (liveClock.userTimeZone !== '') {
-		var offset = liveClock.userTimeZone;
+	liveClock.paramsObj = params;
+	this.paramsObj.timezoneoptions = (this.paramsObj.timezoneoptions) ? this.paramsObj.timezoneoptions : {};
+
+	if(this.paramsObj.timezone !== '' && this.paramsObj.timezone !== undefined && this.paramsObj.timezone !== null) {
+		var offset = this.paramsObj.timezone;
 	} else {
 		var offset = Math.abs(new Date().getTimezoneOffset()/60);
 	}
 
-	liveClock.paramsObj = params;
-	var user24hrFormat = (params.use24hrFormat == 'true') ? true : false;
+	var user24hrFormat = (this.paramsObj.use24hrFormat == 'true') ? true : false;
 	d = new Date();
 	utc = d.getTime() + (d.getTimezoneOffset() * 60000);
 	nd = new Date(utc + (3600000 *+ offset));
@@ -67,42 +62,58 @@ liveClock.initialize = function (params) {
 	else var time = h + ':' + m + ':' + s;
 	docId.innerHTML= time;
 
-	var sel = document.getElementById('live_clock_timezone_options');
-	var items = sel.getElementsByTagName('option');
+	var _this = this,
+		sel = document.getElementById('live_clock_timezone_options'),
+		items = sel.getElementsByTagName('option');
 
-	if(items.length !== Object.keys(liveClock.allTimeZones).length) {
+	if(items.length !== Object.keys(this.paramsObj.timezoneoptions).length) {
 		var opt = null;
-		if(Object.keys(liveClock.allTimeZones).length > 0) {
-			for(i in liveClock.allTimeZones) {
-				var zone_diff = parseFloat(liveClock.allTimeZones[i].zone_diff);
-				opt = document.createElement('option');
-				opt.value = liveClock.allTimeZones[i].id_zone;
-				opt.innerHTML = liveClock.allTimeZones[i].zone_name;
+
+		if(Object.keys(_this.paramsObj.timezoneoptions).length > 0) {
+			for(i in _this.paramsObj.timezoneoptions) {
+				var current = _this.paramsObj.timezoneoptions[i],
+					zone_diff = parseFloat(current.zone_diff),
+					opt = document.createElement('option');
+
+				opt.value = current.id_zone;
+				opt.innerHTML = current.zone_name;
+
 				if(zone_diff == offset) {
 					opt.selected = 'selected';
 				}
 				sel.appendChild(opt);
 			}
-		}	
-	}	
-	liveClock.timeoutCounter = setTimeout("liveClock.initialize(liveClock.paramsObj)",1000);
+		}
+	}
+	setTimeout(function() {
+		_this.initialize(_this.paramsObj)
+	},1000);
 }
 
 liveClock.onTimezoneChange = function(zone) {
+	var _this = this;
 	$.post('index.php', {
 		action: 'liveclock',
 		sa: 'updateusertimezone',
 		timezone: zone
 	}, function(data, textStatus, jqXHR) {
-		// use data here
-		for(i in liveClock.allTimeZones) {
-			var id_zone = liveClock.allTimeZones[i].id_zone;
-			var zone_diff = parseFloat(liveClock.allTimeZones[i].zone_diff);
-			if(id_zone == zone) {
-				liveClock.paramsObj.timezone = zone_diff;
+		if(data == undefined) {
+			alert('Something went wrong. Please try again');
+		} else if(data.response !== undefined && data.response == true) {
+			for(i in _this.paramsObj.timezoneoptions) {
+				var current = _this.paramsObj.timezoneoptions[i],
+					id_zone = current.id_zone,
+					zone_diff = parseFloat(current.zone_diff);
+	
+				if(id_zone == zone) {
+					_this.paramsObj.timezone = zone_diff;
+				}
+			}	
+		} else if(data.response !== undefined && data.response == false) {
+			if(data.error !== undefined && data.error !== '') {
+				alert(data.error)
 			}
 		}
-		clearTimeout(liveClock.timeoutCounter);
-		liveClock.timeoutCounter = setTimeout("liveClock.initialize(liveClock.paramsObj)",1000);
-	});
+	}, 'json');
+	return;
 }

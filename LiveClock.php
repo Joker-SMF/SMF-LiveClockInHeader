@@ -38,8 +38,6 @@ loadLanguage('LiveClock');
 function LC_mainIndex() {
 	global $context, $user_info;
 
-	echo'<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>';
-
 	$default_action_func = 'LC_showClock';
 	$subActions = array(
 		'showclock' => 'LC_showClock',
@@ -48,6 +46,8 @@ function LC_mainIndex() {
 
 	if (isset($_REQUEST['sa']) && isset($subActions[$_REQUEST['sa']]) && function_exists($subActions[$_REQUEST['sa']]))
 		return $subActions[$_REQUEST['sa']]();
+
+	echo'<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>';
 	$default_action_func();
 }
 
@@ -55,17 +55,20 @@ function LC_showClock() {
 	global $context, $modSettings, $settings, $user_info;
 
 	require_once('Subs-LiveClock.php');
+	$context['live_clock_timezones'] = LC_getALlTimeZones();
+
 	if(!$user_info['is_guest']) {
 		$user_info['custom_timezone'] = LC_getUserTimezone();
 	}
 
-	if(isset($user_info['custom_timezone']) && !empty($user_info['custom_timezone'])) {
+	if(!empty($modSettings['lc_forum_timezone_offset']) && !$user_info['is_guest']) {
+		$timezone = $user_info['time_offset'];
+	} elseif(isset($user_info['custom_timezone']) && !empty($user_info['custom_timezone'])) {
 		$timezone = $user_info['custom_timezone'];
 	} else {
-		$timezone = !empty($modSettings['lc_forum_timezone_offset']) ? $user_info['time_offset'] : '';
+		$timezone = '';
 	}
 	$hour_format = !empty($modSettings['lc_24_hr_format']) ? 'true' : 'false';
-	$context['live_clock_timezones'] = LC_getALlTimeZones();
 
 	echo '
 		<script type="text/javascript" src="', $settings['default_theme_url'], '/scripts/LiveClock.js"></script>
@@ -83,16 +86,15 @@ function LC_showClock() {
 function LC_updateUserTimezone() {
 	global $context, $sourcedir, $user_info;
 
-	$resp_fail = array('response' => false);
-	$resp_pass = array('response' => true);
-
 	if($user_info['is_guest']) {
-		echo json_encode($resp_fail);
+		$resp = array('response' => false, 'error' => 'Guests not allowed');
+		echo json_encode($resp);
 		die();	
 	}
 
 	if(!isset($_REQUEST['timezone']) || empty($_REQUEST['timezone'])) {
-		echo json_encode($resp_fail);
+		$resp = array('response' => false, 'error' => 'We don\'t allow blank values');
+		echo json_encode($resp);
 		die();
 	}
 
@@ -101,12 +103,15 @@ function LC_updateUserTimezone() {
 	require_once('Subs-LiveClock.php');
 	$result = LC_updateUserDBZone($timezoneVal);
 	if($result) {
+		$resp_pass = array('response' => true);
 		echo json_encode($resp_pass);
 		die();
 	} else {
-		echo json_encode($resp_fail);
+		$resp = array('response' => false, 'error' => 'Error updating the value');
+		echo json_encode($resp);
 		die();
 	}
+	return;
 }
 
 ?>
