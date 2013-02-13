@@ -65,6 +65,7 @@ function template_lc_admin_info() {
 	<div class="cat_bar">
 		<h3 class="catbg">
 			', $context['live_clock']['tab_name'] ,'
+			<span class="floatright"><a style="background: #fff; color: #000; padding: 1px 6px; border-radius: 3px;" href="', $scripturl, '?action=liveclock;sa=resetalltimezones;', $context['session_var'], '=', $context['session_id'], '" onclick="return confirm(\'', $txt['confirm_alltimezone_reset'], '?\');">', $txt['reset'],'</a></span>
 		</h3>
 	</div>';
 }

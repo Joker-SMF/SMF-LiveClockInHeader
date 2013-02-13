@@ -64,7 +64,8 @@ function LiveClockAdminPanel($return_config = false) {
 		'basicsettings' => 'LC_basicLiveClockSettings',
 		'savebasicsettings' => 'LC_saveBasicSettings',
 		'displaytimezones' => 'LC_displayTimezones',
-		'savetimezones' => 'LC_saveTimezones'
+		'savetimezones' => 'LC_saveTimezones',
+		'resetalltimezones' => 'LC_resetAllTimeZones',
 	);
 
 	//wakey wakey, call the func you lazy
@@ -186,6 +187,13 @@ function LC_sanitizeTimezoneDBData($data = array()) {
 		}
 	}
 	return $data;
+}
+
+function LC_resetAllTimeZones() {
+	global $context;
+
+	echo 'in it';
+	die();
 }
 
 ?>

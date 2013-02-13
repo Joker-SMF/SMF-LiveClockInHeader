@@ -56,4 +56,7 @@ $txt['lc_submit'] = 'Submit';
 $txt['lc_timezone_name'] = 'Timezone Name';
 $txt['lc_timezone_diff'] = 'Timezone Difference';
 
+$txt['reset'] = 'Reset';
+$txt['confirm_alltimezone_reset'] = 'Reset all timezones';
+
 ?>
