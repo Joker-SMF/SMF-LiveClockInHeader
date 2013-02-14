@@ -97,6 +97,8 @@ function LC_basicLiveClockSettings() {
 function LC_saveBasicSettings() {
 	global $context, $sourcedir;
 
+	isAllowedTo('admin_forum');
+
 	if (isset($_POST['submit'])) {
 		checkSession();
 
@@ -177,12 +179,14 @@ function LC_saveTimezones() {
 
 function LC_sanitizeTimezoneDBData($data = array()) {
 	global $context;
-	
+
+	isAllowedTo('admin_forum');
+
 	if (!is_array($data))
 		return false;
 
 	foreach ($data as $key => $val) {
-		if (empty($val['zone_diff']) || empty($val['zone_name'])) {
+		if (empty($val['zone_diff']) || empty($val['zone_name']) || $val['zone_diff'] < -12 || $val['zone_diff'] > 12) {
 			unset($data[$key]);
 		}
 	}
@@ -192,8 +196,53 @@ function LC_sanitizeTimezoneDBData($data = array()) {
 function LC_resetAllTimeZones() {
 	global $context;
 
-	echo 'in it';
-	die();
+	isAllowedTo('admin_forum');
+	require_once('Subs-LiveClock.php');
+
+	$data = LC_defaultTimezones();
+	LC_resetDBTimezones($data);
+	redirectexit('action=admin;area=liveclock;sa=displaytimezones');
+}
+
+function LC_defaultTimezones() {
+	global $context;
+
+	isAllowedTo('admin_forum');
+
+	$live_clock_timezones = array(
+		'Eniwetok, Kwajalein' => '-12',
+		'Midway Island, Samoa' => '-11',
+		'Hawaii' => '-10',
+		'Alaska' => '-9',
+		'Pacific Time (US &amp; Canada)' => '-8',
+		'Mountain Time (US &amp; Canada)' => '-7',
+		'Central Time (US &amp; Canada), Mexico City' => '-6',
+		'Eastern Time (US &amp; Canada), Bogota, Lima' => '-5',
+		'Atlantic Time (Canada), Caracas, La Paz' => '-4',
+		'Newfoundland' => '-3.5',
+		'Brazil, Buenos Aires, Georgetown' => '-3',
+		'Mid-Atlantic' => '-2',
+		'Azores, Cape Verde Islands' => '-1',
+		'Western Europe Time, London, Lisbon, Casablanca' => '0',
+		'Brussels, Copenhagen, Madrid, Paris' => '+1',
+		'Kaliningrad, South Africa' => '+2',
+		'Baghdad, Riyadh, Moscow, St. Petersburg' => '+3',
+		'Tehran' => '+3.5',
+		'Abu Dhabi, Muscat, Baku, Tbilisi' => '+4',
+		'Kabul' => '+4.5',
+		'Ekaterinburg, Islamabad, Karachi, Tashkent' => '+5',
+		'Bombay, Calcutta, Madras, New Delhi' => '+5.5',
+		'Kathmandu' => '+5.75',
+		'Almaty, Dhaka, Colombo' => '+6',
+		'Bangkok, Hanoi, Jakarta' => '+7',
+		'Beijing, Perth, Singapore, Hong Kong' => '+8',
+		'Tokyo, Seoul, Osaka, Sapporo, Yakutsk' => '+9',
+		'Adelaide, Darwin' => '+9.5',
+		'Eastern Australia, Guam, Vladivostok' => '+10',
+		'Magadan, Solomon Islands, New Caledonia' => '+11',
+		'Auckland, Wellington, Fiji, Kamchatka' => '+12',
+	);
+	return $live_clock_timezones;
 }
 
 ?>

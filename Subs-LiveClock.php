@@ -136,4 +136,28 @@ function LC_updateUserDBZone($timezoneID = '') {
 	return true;
 }
 
+function LC_resetDBTimezones($data = array()) {
+	global $smcFunc;
+
+	if (!is_array($data))
+		return false;
+
+	//Just empty the data and add new data
+	LC_clearAllTimezones();
+
+	foreach ($data as $key => $val) {
+		$smcFunc['db_insert']('',
+			'{db_prefix}live_clock_timezones',
+			array(
+				'zone_name' => 'string', 'zone_diff' => 'string',
+			),
+			array(
+				$key, $val,
+			),
+			array()
+		);
+	}
+	return true;
+}
+
 ?>
