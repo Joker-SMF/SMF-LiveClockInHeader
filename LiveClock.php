@@ -52,8 +52,13 @@ function LC_mainIndex() {
 }
 
 function LC_showClock() {
-	global $context, $modSettings, $settings, $user_info;
+	global $context, $modSettings, $settings, $user_info, $sourcedir;
 
+	// Check to avoid uninstall error
+	$file_path = $sourcedir . '/Subs-LiveClock.php';
+	if(!file_exists($file_path)) {
+		return false;
+	}
 	require_once('Subs-LiveClock.php');
 	$context['live_clock_timezones'] = LC_getALlTimeZones();
 
