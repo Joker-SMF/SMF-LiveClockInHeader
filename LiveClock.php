@@ -33,10 +33,8 @@
 if (!defined('SMF'))
 	die('Hacking attempt...');
 
-loadLanguage('LiveClock');
-
 function LC_mainIndex() {
-	global $context, $user_info;
+	global $context;
 
 	$default_action_func = 'LC_showClock';
 	$subActions = array(
@@ -47,7 +45,16 @@ function LC_mainIndex() {
 	if (isset($_REQUEST['sa']) && isset($subActions[$_REQUEST['sa']]) && function_exists($subActions[$_REQUEST['sa']]))
 		return $subActions[$_REQUEST['sa']]();
 
-	echo'<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>';
+	echo '
+	<script>
+			var head= document.getElementsByTagName("head")[0];
+			var script= document.createElement("script");
+			script.type= "text/javascript";
+			if(!window.jQuery) {
+				document.write("<script type=\"text/javascript\" src=\"https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js\"><\/script>");
+			}
+	</script>';
+
 	$default_action_func();
 }
 
@@ -59,7 +66,7 @@ function LC_showClock() {
 	if(!file_exists($file_path)) {
 		return false;
 	}
-	require_once('Subs-LiveClock.php');
+	require_once($sourcedir . '/Subs-LiveClock.php');
 	$context['live_clock_timezones'] = LC_getALlTimeZones();
 
 	if(!$user_info['is_guest']) {
@@ -77,7 +84,7 @@ function LC_showClock() {
 
 	echo '
 		<script type="text/javascript" src="', $settings['default_theme_url'], '/scripts/LiveClock.js"></script>
-		<script type="text/javascript">
+		<script type="text/javascript"><!-- // --><![CDATA[
 			//lets make params
 			var params = {
 				timezone : "'. $timezone .'",
@@ -85,11 +92,11 @@ function LC_showClock() {
 				timezoneoptions: '. json_encode($context['live_clock_timezones']) .',
 			}
 			liveClock.initialize(params)
-		</script>';
+		// ]]></script>';
 }
 
 function LC_updateUserTimezone() {
-	global $context, $sourcedir, $user_info;
+	global $sourcedir, $user_info;
 
 	if($user_info['is_guest']) {
 		$resp = array('response' => false, 'error' => 'Guests not allowed');
@@ -105,7 +112,7 @@ function LC_updateUserTimezone() {
 
 	$timezoneVal = (int) $_REQUEST['timezone'];
 
-	require_once('Subs-LiveClock.php');
+	require_once($sourcedir . '/Subs-LiveClock.php');
 	$result = LC_updateUserDBZone($timezoneVal);
 	if($result) {
 		$resp_pass = array('response' => true);

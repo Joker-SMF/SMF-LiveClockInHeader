@@ -97,18 +97,7 @@ foreach ($tables as $table => $data) {
 	$smcFunc['db_create_table']('{db_prefix}' . $table, $data['columns'], $data['indexes']);
 }
 
-$general_settings = array(
-	'lc_mod_enable' => 0,
-    'lc_forum_timezone_offset' => 0,
-    'lc_24_hr_format' => 0,
-);
-
-foreach ($general_settings as $key => $value) {
-    $smcFunc['db_insert']('ignore',
-        '{db_prefix}settings', array('variable' => 'string', 'value' => 'string'),
-        array($key, $value), ''
-    );
-}
+updateSettings(array('lc_mod_enable' => 0, 'lc_forum_timezone_offset' => 0, 'lc_24_hr_format' => 0));
 
 $live_clock_timezones = array(
     'Eniwetok, Kwajalein' => '-12',

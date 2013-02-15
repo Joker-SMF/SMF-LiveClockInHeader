@@ -33,14 +33,12 @@
 if (!defined('SMF'))
 	die('Hacking attempt...');
 
-loadLanguage('LiveClock');
-loadtemplate('LiveClock');
-
 function LiveClockAdminPanel($return_config = false) {
-	global $txt, $scripturl, $context, $sourcedir;
+	global $txt, $context;
 
 	/* I can has Adminz? */
 	isAllowedTo('admin_forum');
+	loadLanguage('LiveClock');
 
 	$context['page_title'] = $txt['lc_admin_panel'];
 	$default_action_func = 'LC_basicLiveClockSettings';
@@ -75,12 +73,14 @@ function LiveClockAdminPanel($return_config = false) {
 }
 
 function LC_basicLiveClockSettings() {
-	global $txt, $scripturl, $context, $sourcedir, $user_info;
+	global $txt, $context, $sourcedir;
 
 	/* I can has Adminz? */
 	isAllowedTo('admin_forum');
-
+	loadLanguage('LiveClock');
+	loadtemplate('LiveClock');
 	require_once($sourcedir . '/ManageServer.php');
+
 	$general_settings = array(
 		array('check', 'lc_mod_enable', 'subtext' => $txt['lc_mod_enable_desc']),
 		array('check', 'lc_forum_timezone_offset', 'subtext' => $txt['lc_forum_timezone_offset_desc']),
@@ -95,9 +95,10 @@ function LC_basicLiveClockSettings() {
 }
 
 function LC_saveBasicSettings() {
-	global $context, $sourcedir;
+	global $sourcedir;
 
 	isAllowedTo('admin_forum');
+	loadLanguage('LiveClock');
 
 	if (isset($_POST['submit'])) {
 		checkSession();
@@ -119,8 +120,9 @@ function LC_displayTimezones() {
 
 	/* I can has Adminz? */
 	isAllowedTo('admin_forum');
-
-	require_once('Subs-LiveClock.php');
+	loadLanguage('LiveClock');
+	loadtemplate('LiveClock');
+	require_once($sourcedir . '/Subs-LiveClock.php');
 
 	$context['live_clock_timezones'] = LC_getALlTimeZones();
 	$context['page_title'] = $txt['lc_admin_panel'];
@@ -130,11 +132,12 @@ function LC_displayTimezones() {
 }
 
 function LC_saveTimezones() {
-	global $context, $sourcedir, $txt;
+	global $sourcedir;
 
 	/* I can has Adminz? */
 	isAllowedTo('admin_forum');
-	require_once('Subs-LiveClock.php');
+	loadLanguage('LiveClock');
+	require_once($sourcedir . '/Subs-LiveClock.php');
 
 	$data = array();
 	unset($_POST['submit']);
@@ -178,7 +181,6 @@ function LC_saveTimezones() {
 }
 
 function LC_sanitizeTimezoneDBData($data = array()) {
-	global $context;
 
 	isAllowedTo('admin_forum');
 
@@ -194,10 +196,10 @@ function LC_sanitizeTimezoneDBData($data = array()) {
 }
 
 function LC_resetAllTimeZones() {
-	global $context;
+	global $sourcedir;
 
 	isAllowedTo('admin_forum');
-	require_once('Subs-LiveClock.php');
+	require_once($sourcedir . '/Subs-LiveClock.php');
 
 	$data = LC_defaultTimezones();
 	LC_resetDBTimezones($data);
@@ -205,7 +207,6 @@ function LC_resetAllTimeZones() {
 }
 
 function LC_defaultTimezones() {
-	global $context;
 
 	isAllowedTo('admin_forum');
 

@@ -36,7 +36,7 @@ function template_lc_admin_info() {
 	echo '
 	<div class="cat_bar">
 		<h3 class="catbg">
-			<span class="ie6_header floatleft">', $txt['lc_admin_panel'] ,'</span>
+			', $txt['lc_admin_panel'] ,'
 		</h3>
 	</div>
 	<p class="windowbg description">', isset($context['live_clock']['tab_desc']) ? $context['live_clock']['tab_desc'] : $txt['lc_general_desc'] ,'</p>';

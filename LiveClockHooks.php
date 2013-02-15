@@ -33,19 +33,16 @@
 if (!defined('SMF'))
 	die('Hacking attempt...');
 
-loadLanguage('LiveClock');
-
-require_once('LiveClock.php');
-
 function LC_addAction(&$actionArray) {
-	global $context;
 
+	require_once('LiveClock.php');
     $actionArray['liveclock'] = array('LiveClock.php', 'LC_mainIndex');
 }
 
 function LC_addAdminPanel(&$admin_areas) {
-	global $txt, $modSettings, $context;
+	global $txt;
 
+	loadLanguage('LiveClock');
 	loadtemplate('LiveClock');
 	$admin_areas['config']['areas']['liveclock'] = array(
 		'label' => $txt['lc_admin_menu'],
