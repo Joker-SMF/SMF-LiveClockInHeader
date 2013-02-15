@@ -34,8 +34,6 @@ if (!defined('SMF'))
 	die('Hacking attempt...');
 
 function LC_addAction(&$actionArray) {
-
-	require_once('LiveClock.php');
     $actionArray['liveclock'] = array('LiveClock.php', 'LC_mainIndex');
 }
 

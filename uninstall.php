@@ -38,6 +38,8 @@ if (file_exists(dirname(__FILE__) . '/SSI.php') && !defined('SMF'))
 elseif (!defined('SMF'))
 	die('<b>Error:</b> Cannot uninstall - please verify you put this in the same place as SMF\'s index.php.');
 
+global $sourcedir;
+
 remove_integration_function('integrate_pre_include', '$sourcedir/LiveClock.php');
 remove_integration_function('integrate_actions', 'LC_addAction');
 
