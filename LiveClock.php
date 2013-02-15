@@ -34,7 +34,6 @@ if (!defined('SMF'))
 	die('Hacking attempt...');
 
 function LC_mainIndex() {
-	global $context;
 
 	$default_action_func = 'LC_showClock';
 	$subActions = array(
