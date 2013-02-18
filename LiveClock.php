@@ -49,7 +49,7 @@ function LC_mainIndex() {
 			var head= document.getElementsByTagName("head")[0];
 			var script= document.createElement("script");
 			script.type= "text/javascript";
-			if(!window.jQuery) {
+			if (!window.jQuery) {
 				document.write("<script type=\"text/javascript\" src=\"https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js\"><\/script>");
 			}
 	</script>';
@@ -62,19 +62,19 @@ function LC_showClock() {
 
 	// Check to avoid uninstall error
 	$file_path = $sourcedir . '/Subs-LiveClock.php';
-	if(!file_exists($file_path)) {
+	if (!file_exists($file_path)) {
 		return false;
 	}
 	require_once($sourcedir . '/Subs-LiveClock.php');
 	$context['live_clock_timezones'] = LC_getALlTimeZones();
 
-	if(!$user_info['is_guest']) {
+	if (!$user_info['is_guest']) {
 		$user_info['custom_timezone'] = LC_getUserTimezone();
 	}
 
-	if(!empty($modSettings['lc_forum_timezone_offset']) && !$user_info['is_guest']) {
+	if (!empty($modSettings['lc_forum_timezone_offset']) && !$user_info['is_guest']) {
 		$timezone = $user_info['time_offset'];
-	} elseif(isset($user_info['custom_timezone']) && !empty($user_info['custom_timezone'])) {
+	} elseif (isset($user_info['custom_timezone']) && !empty($user_info['custom_timezone'])) {
 		$timezone = $user_info['custom_timezone'];
 	} else {
 		$timezone = '';
@@ -97,13 +97,13 @@ function LC_showClock() {
 function LC_updateUserTimezone() {
 	global $sourcedir, $user_info;
 
-	if($user_info['is_guest']) {
+	if ($user_info['is_guest']) {
 		$resp = array('response' => false, 'error' => 'Guests not allowed');
 		echo json_encode($resp);
 		die();	
 	}
 
-	if(!isset($_REQUEST['timezone']) || empty($_REQUEST['timezone'])) {
+	if (!isset($_REQUEST['timezone']) || empty($_REQUEST['timezone'])) {
 		$resp = array('response' => false, 'error' => 'We don\'t allow blank values');
 		echo json_encode($resp);
 		die();
@@ -113,7 +113,7 @@ function LC_updateUserTimezone() {
 
 	require_once($sourcedir . '/Subs-LiveClock.php');
 	$result = LC_updateUserDBZone($timezoneVal);
-	if($result) {
+	if ($result) {
 		$resp_pass = array('response' => true);
 		echo json_encode($resp_pass);
 		die();

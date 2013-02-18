@@ -93,7 +93,7 @@ function LC_clearAllTimezones() {
 function LC_getUserTimezone()  {
 	global $smcFunc, $user_info;
 
-	if($user_info['is_guest']) {
+	if ($user_info['is_guest']) {
 		return false;
 	}
 
@@ -118,11 +118,11 @@ function LC_getUserTimezone()  {
 function LC_updateUserDBZone($timezoneID = '') {
 	global $smcFunc, $user_info;
 
-	if(empty($timezoneID)) {
+	if (empty($timezoneID)) {
 		return false;
 	}
 	
-	if($user_info['is_guest']) {
+	if ($user_info['is_guest']) {
 		return false;
 	}
 
