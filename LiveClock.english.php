@@ -30,8 +30,6 @@
 *
 */
 
-global $txt;
-
 $txt['LC_loading'] = 'Loading...';
 
 // Admin panel strings
@@ -58,5 +56,10 @@ $txt['lc_timezone_diff'] = 'Timezone Difference';
 
 $txt['reset'] = 'Reset Timezones';
 $txt['confirm_alltimezone_reset'] = 'Reset all timezones';
+
+//error strings
+$txt['error_guests_not_allowed'] = 'Guests do not have the permission';
+$txt['error_blank_value'] = 'We don\'t allow blank values';
+$txt['error_updating_timezone'] = 'Error updating the value';
 
 ?>

@@ -34,6 +34,7 @@ if (!defined('SMF'))
 	die('Hacking attempt...');
 
 function LC_mainIndex() {
+	global $context;
 
 	$default_action_func = 'LC_showClock';
 	$subActions = array(
@@ -44,8 +45,8 @@ function LC_mainIndex() {
 	if (isset($_REQUEST['sa']) && isset($subActions[$_REQUEST['sa']]) && function_exists($subActions[$_REQUEST['sa']]))
 		return $subActions[$_REQUEST['sa']]();
 
-	echo '
-	<script>
+	$context['html_headers'] .= '
+	<script type="text/javascript">
 			var head= document.getElementsByTagName("head")[0];
 			var script= document.createElement("script");
 			script.type= "text/javascript";
@@ -82,7 +83,7 @@ function LC_showClock() {
 	$hour_format = !empty($modSettings['lc_24_hr_format']) ? 'true' : 'false';
 
 	echo '
-		<script type="text/javascript" src="', $settings['default_theme_url'], '/scripts/LiveClock.js"></script>
+		<script type="text/javascript" src="'. $settings['default_theme_url']. '/scripts/LiveClock.js"></script>
 		<script type="text/javascript"><!-- // --><![CDATA[
 			//lets make params
 			var params = {
@@ -95,16 +96,16 @@ function LC_showClock() {
 }
 
 function LC_updateUserTimezone() {
-	global $sourcedir, $user_info;
+	global $sourcedir, $user_info, $txt;
 
 	if ($user_info['is_guest']) {
-		$resp = array('response' => false, 'error' => 'Guests not allowed');
+		$resp = array('response' => false, 'error' => $txt['error_guests_not_allowed']);
 		echo json_encode($resp);
 		die();	
 	}
 
 	if (!isset($_REQUEST['timezone']) || empty($_REQUEST['timezone'])) {
-		$resp = array('response' => false, 'error' => 'We don\'t allow blank values');
+		$resp = array('response' => false, 'error' => $txt['error_blank_value']);
 		echo json_encode($resp);
 		die();
 	}
@@ -118,7 +119,7 @@ function LC_updateUserTimezone() {
 		echo json_encode($resp_pass);
 		die();
 	} else {
-		$resp = array('response' => false, 'error' => 'Error updating the value');
+		$resp = array('response' => false, 'error' => $txt['error_updating_timezone']);
 		echo json_encode($resp);
 		die();
 	}

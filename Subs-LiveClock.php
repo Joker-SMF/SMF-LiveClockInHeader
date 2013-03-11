@@ -100,8 +100,8 @@ function LC_getUserTimezone()  {
 	$request = $smcFunc['db_query']('', '
 		SELECT ct.zone_diff
 		FROM {db_prefix}live_clock_user_zone as uz 
-		inner join {db_prefix}live_clock_timezones as ct on (uz.id_zone = ct.id_zone)
-		where uz.id_member = {int:id_member}
+		INNER JOIN {db_prefix}live_clock_timezones AS ct ON (uz.id_zone = ct.id_zone)
+		WHERE uz.id_member = {int:id_member}
 		LIMIT 1',
 		array(
 			'id_member' => $user_info['id'],
