@@ -81,7 +81,9 @@ function LC_showClock() {
 		$timezone = '';
 	}
 	$hour_format = !empty($modSettings['lc_24_hr_format']) ? 'true' : 'false';
+	$lc_forum_timezone_offset = !empty($modSettings['lc_forum_timezone_offset']) ? 'true' : 'false';
 
+	//echo $modSettings['lc_forum_timezone_offset'];
 	$context['insert_after_template'] .= '
 	<script type="text/javascript" src="'. $settings['default_theme_url']. '/scripts/LiveClock.js"></script>
 	<script type="text/javascript"><!-- // --><![CDATA[
@@ -90,6 +92,7 @@ function LC_showClock() {
 			timezone : "'. $timezone .'",
 			use24hrFormat : "'. $hour_format .'",
 			timezoneoptions: '. json_encode($context['live_clock_timezones']) .',
+			useForumTimezoneOffset: '. $lc_forum_timezone_offset .',
 		}
 		liveClock.initialize(params)
 	// ]]></script>';
