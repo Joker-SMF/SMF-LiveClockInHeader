@@ -45,14 +45,14 @@ function LC_mainIndex() {
 	if (isset($_REQUEST['sa']) && isset($subActions[$_REQUEST['sa']]) && function_exists($subActions[$_REQUEST['sa']]))
 		return $subActions[$_REQUEST['sa']]();
 
-	$context['html_headers'] .= '
+	$context['insert_after_template'] .= '
 	<script type="text/javascript">
-			var head= document.getElementsByTagName("head")[0];
-			var script= document.createElement("script");
-			script.type= "text/javascript";
-			if (!window.jQuery) {
-				document.write("<script type=\"text/javascript\" src=\"https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js\"><\/script>");
-			}
+		var head= document.getElementsByTagName("head")[0];
+		var script= document.createElement("script");
+		script.type= "text/javascript";
+		if (!window.jQuery) {
+			document.write("<script type=\"text/javascript\" src=\"https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js\"><\/script>");
+		}
 	</script>';
 
 	$default_action_func();
@@ -82,17 +82,17 @@ function LC_showClock() {
 	}
 	$hour_format = !empty($modSettings['lc_24_hr_format']) ? 'true' : 'false';
 
-	echo '
-		<script type="text/javascript" src="'. $settings['default_theme_url']. '/scripts/LiveClock.js"></script>
-		<script type="text/javascript"><!-- // --><![CDATA[
-			//lets make params
-			var params = {
-				timezone : "'. $timezone .'",
-				use24hrFormat : "'. $hour_format .'",
-				timezoneoptions: '. json_encode($context['live_clock_timezones']) .',
-			}
-			liveClock.initialize(params)
-		// ]]></script>';
+	$context['insert_after_template'] .= '
+	<script type="text/javascript" src="'. $settings['default_theme_url']. '/scripts/LiveClock.js"></script>
+	<script type="text/javascript"><!-- // --><![CDATA[
+		//lets make params
+		var params = {
+			timezone : "'. $timezone .'",
+			use24hrFormat : "'. $hour_format .'",
+			timezoneoptions: '. json_encode($context['live_clock_timezones']) .',
+		}
+		liveClock.initialize(params)
+	// ]]></script>';
 }
 
 function LC_updateUserTimezone() {
