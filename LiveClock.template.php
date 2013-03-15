@@ -78,7 +78,7 @@ function template_lc_admin_basic_setting_panel()
 
 	echo '
 	<div id="admincenter">
-		<form action="'. $scripturl .'?action=admin;area=liveclock;sa=savebasicsettings" method="post" accept-charset="UTF-8">
+		<form action="'. $scripturl .'?action=admin;area=liveclock;sa=savebasicsettings" method="post" accept-charset="', $context['character_set'], '">
 			<div class="windowbg2">
 				<span class="topslice"><span></span></span>
 					<div class="content">';
@@ -111,7 +111,7 @@ function template_lc_admin_basic_setting_panel()
 	
 		</form>
 	</div>
-	<br class="clear">';
+	<br class="clear" />';
 }
 
 function template_lc_admin_timezone_setting_panel() {
@@ -127,9 +127,9 @@ function template_lc_admin_timezone_setting_panel() {
 
 				foreach ($context['live_clock_timezones'] as $timezones) {
 					echo '
-					<input type="text" name="timezonename_'. $timezones['id_zone'] .'" size="50" maxlength="255"  name="" value="', $timezones['zone_name'] ,'" class="input_text" placeholder="'. $txt['lc_timezone_name'] .'" />';
+					<input type="text" name="timezonename_'. $timezones['id_zone'] .'" size="50" maxlength="255" value="', $timezones['zone_name'] ,'" class="input_text" placeholder="'. $txt['lc_timezone_name'] .'" />';
 					echo '
-					<input type="text" name="timezonediff_'. $timezones['id_zone'] .'" size="5" maxlength="5" name="" value="', $timezones['zone_diff'] ,'" class="input_text" placeholder="'. $txt['lc_timezone_diff'] .'" /><br />';
+					<input type="text" name="timezonediff_'. $timezones['id_zone'] .'" size="5" maxlength="5" value="', $timezones['zone_diff'] ,'" class="input_text" placeholder="'. $txt['lc_timezone_diff'] .'" /><br />';
 				}
 
 				echo '
