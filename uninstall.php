@@ -2,7 +2,7 @@
 
 /**
 * @package manifest file for Live clock in header
-* @version 1.0
+* @version 1.1
 * @author Joker (http://www.simplemachines.org/community/index.php?action=profile;u=226111)
 * @copyright Copyright (c) 2012, Siddhartha Gupta
 * @license http://www.mozilla.org/MPL/MPL-1.1.html
@@ -40,7 +40,9 @@ elseif (!defined('SMF'))
 
 global $sourcedir;
 
+remove_integration_function('integrate_pre_include', '$sourcedir/LiveClockHooks.php');
 remove_integration_function('integrate_pre_include', '$sourcedir/LiveClock.php');
+remove_integration_function('integrate_admin_areas', 'LC_addAdminPanel');
 remove_integration_function('integrate_actions', 'LC_addAction');
 
 ?>
