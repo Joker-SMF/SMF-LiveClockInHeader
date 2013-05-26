@@ -83,8 +83,9 @@ function LC_basicLiveClockSettings() {
 
 	$general_settings = array(
 		array('check', 'lc_mod_enable', 'subtext' => $txt['lc_mod_enable_desc']),
-		array('check', 'lc_forum_timezone_offset', 'subtext' => $txt['lc_forum_timezone_offset_desc']),
+		array('check', 'lc_show_timezone_dropdown', 'subtext' => $txt['lc_show_timezone_dropdown_desc']),
 		array('check', 'lc_24_hr_format', 'subtext' => $txt['lc_24_hr_format_desc']),
+		array('check', 'lc_show_date', 'subtext' => $txt['lc_show_date_desc']),
 	);
 
 	$context['page_title'] = $txt['lc_admin_panel'];
@@ -105,8 +106,9 @@ function LC_saveBasicSettings() {
 
 		$general_settings = array(
 			array('check', 'lc_mod_enable'),
-			array('check', 'lc_forum_timezone_offset'),
+			array('check', 'lc_show_timezone_dropdown'),
 			array('check', 'lc_24_hr_format'),
+			array('check', 'lc_show_date'),
 		);
 
 		require_once($sourcedir . '/ManageServer.php');

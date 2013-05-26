@@ -105,7 +105,7 @@ foreach ($tables as $table => $data) {
 	$smcFunc['db_create_table']('{db_prefix}' . $table, $data['columns'], $data['indexes']);
 }
 
-updateSettings(array('lc_mod_enable' => 0, 'lc_forum_timezone_offset' => 0, 'lc_24_hr_format' => 0));
+updateSettings(array('lc_mod_enable' => 1, 'lc_show_timezone_dropdown' => 1, 'lc_24_hr_format' => 0, 'lc_show_date' => 1));
 
 $live_clock_timezones = array(
     'Eniwetok, Kwajalein' => '-12',

@@ -30,10 +30,10 @@
 *
 */
 
-$txt['LC_loading'] = 'Loading...';
+$txt['lc_ajax_in_progress'] = 'Loading...';
 
 // Admin panel strings
-$txt['lc_admin_menu'] = 'Live Clock Admin';
+$txt['lc_admin_menu'] = 'Live Clock';
 $txt['lc_admin_panel'] = 'Live Clock admin panel';
 $txt['lc_general_desc'] = 'This is the admin panel for the Live Clock mod.';
 
@@ -44,10 +44,12 @@ $txt['lc_timezone_settings_desc'] = 'Section specifically made to add/modifiy ti
 
 $txt['lc_mod_enable'] = 'Enable Live Clock mod';
 $txt['lc_mod_enable_desc'] = 'Global permission to enable/disable mod';
-$txt['lc_forum_timezone_offset'] = 'Use Forum Timezone';
-$txt['lc_forum_timezone_offset_desc'] = 'Enabling this option will use user timezone offset placed by forum. This is not correct for some zones. E.g India';
+$txt['lc_show_timezone_dropdown'] = 'Show Timezone dropdown';
+$txt['lc_show_timezone_dropdown_desc'] = 'Enabling this option will show diffrent timezone options in dropdown.';
 $txt['lc_24_hr_format'] = 'Use 24hr format';
 $txt['lc_24_hr_format_desc'] = 'Use a 24hr format to display the time.';
+$txt['lc_show_date'] = 'Show date with time in clock.';
+$txt['lc_show_date_desc'] = 'Displays date as well with time in the clock.';
 
 $txt['lc_submit'] = 'Submit';
 

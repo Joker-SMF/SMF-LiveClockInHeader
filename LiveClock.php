@@ -73,17 +73,14 @@ function LC_showClock() {
 		$user_info['custom_timezone'] = LC_getUserTimezone();
 	}
 
-	if (!empty($modSettings['lc_forum_timezone_offset']) && !$user_info['is_guest']) {
-		$timezone = $user_info['time_offset'];
-	} elseif (isset($user_info['custom_timezone']) && !empty($user_info['custom_timezone'])) {
+	$timezone = '';
+	if (isset($user_info['custom_timezone']) && !empty($user_info['custom_timezone'])) {
 		$timezone = $user_info['custom_timezone'];
-	} else {
-		$timezone = '';
 	}
 	$hour_format = !empty($modSettings['lc_24_hr_format']) ? 'true' : 'false';
-	$lc_forum_timezone_offset = !empty($modSettings['lc_forum_timezone_offset']) ? 'true' : 'false';
+	$showTimezoneDropdown = !empty($modSettings['lc_show_timezone_dropdown']) ? 'true' : 'false';
+	$showDate = !empty($modSettings['lc_show_date']) ? 'true' : 'false';
 
-	//echo $modSettings['lc_forum_timezone_offset'];
 	$context['insert_after_template'] .= '
 	<script type="text/javascript" src="'. $settings['default_theme_url']. '/scripts/LiveClock.js"></script>
 	<script type="text/javascript"><!-- // --><![CDATA[
@@ -92,7 +89,8 @@ function LC_showClock() {
 			timezone : "'. $timezone .'",
 			use24hrFormat : "'. $hour_format .'",
 			timezoneoptions: '. json_encode($context['live_clock_timezones']) .',
-			useForumTimezoneOffset: '. $lc_forum_timezone_offset .',
+			showTimezoneDropdown : "'. $showTimezoneDropdown .'",
+			showDate : "'. $showDate .'"
 		}
 		liveClock.initialize(params)
 	// ]]></script>';

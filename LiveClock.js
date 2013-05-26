@@ -37,12 +37,17 @@
 
 var liveClock = {
 	paramsObj : null,
+	timer: null,
+	monthsList:  ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'],
 };
 
 liveClock.initialize = function (params) {
 	var docId = document.getElementById('live_clock');
+	clearTimeout(liveClock.timer);
+	liveClock.timer = null;
+
 	if (!docId) {
-		setTimeout(function() {
+		liveClock.timer = setTimeout(function() {
 			liveClock.initialize(params);
 		},1000);
 		return;
@@ -52,8 +57,8 @@ liveClock.initialize = function (params) {
 		return;
 	}
 
-	liveClock.paramsObj = params;
-	this.paramsObj.timezoneoptions = (this.paramsObj.timezoneoptions) ? this.paramsObj.timezoneoptions : {};
+	liveClock.paramsObj = liveClock.paramsObj || params;
+	liveClock.paramsObj.timezoneoptions = (liveClock.paramsObj.timezoneoptions) ? liveClock.paramsObj.timezoneoptions : {};
 
 	if (this.paramsObj.timezone !== '' && this.paramsObj.timezone !== undefined && this.paramsObj.timezone !== null) {
 		var offset = this.paramsObj.timezone;
@@ -61,19 +66,17 @@ liveClock.initialize = function (params) {
 		var offset = Math.abs(new Date().getTimezoneOffset()/60);
 	}
 
-	var useForumTimezoneOffset = false;
-	if(this.paramsObj.useForumTimezoneOffset) {
-		useForumTimezoneOffset = true;
-	}
-
-	var user24hrFormat = (this.paramsObj.use24hrFormat == 'true') ? true : false;
+	var user24hrFormat = (liveClock.paramsObj.use24hrFormat == 'true') ? true : false;
 	d = new Date();
 	utc = d.getTime() + (d.getTimezoneOffset() * 60000);
 	nd = new Date(utc + (3600000 *+ offset));
 
 	var s = nd.getSeconds(),
 		m = nd.getMinutes(),
-		h = nd.getHours();
+		h = nd.getHours(),
+		date = nd.getDate(),
+		month = liveClock.monthsList[nd.getMonth()],
+		year = nd.getFullYear();
 	if (!user24hrFormat) var am_pm;
 
 	if (s < 10) {
@@ -85,20 +88,24 @@ liveClock.initialize = function (params) {
 	if (!user24hrFormat) {
 		if (h > 12) {
 			h = h - 12;
-			am_pm = 'pm'
+			am_pm = ' pm'
 		} else {
-			am_pm = 'am';
+			am_pm = ' am';
 		}	
 	}
 	if (h < 10) {
 		h= '0' + h;
 	}
-	if (!user24hrFormat) var time = h + ':' + m + ':' + s + am_pm;
-	else var time = h + ':' + m + ':' + s;
+	var time = '';
+	if(liveClock.paramsObj.showDate === 'true') time += month + ' ' + date +', ' + year + ', ';
+
+	if (!user24hrFormat) time += h + ':' + m + ':' + s + am_pm;
+	else time += h + ':' + m + ':' + s;
+
 	docId.innerHTML= time;
 
 	var _this = this;
-	if(!useForumTimezoneOffset) {
+	if(liveClock.paramsObj.showTimezoneDropdown === "true") {
 		if($('#live_clock_timezone_options').is(':hidden')) $('#live_clock_timezone_options').show();
 		var sel = document.getElementById('live_clock_timezone_options'),
 			items = sel.getElementsByTagName('option');
@@ -122,10 +129,8 @@ liveClock.initialize = function (params) {
 				}
 			}
 		}	
-	} else {
-		$('#live_clock_timezone_options').hide();
 	}
-	setTimeout(function() {
+	liveClock.timer = setTimeout(function() {
 		_this.initialize(_this.paramsObj)
 	},1000);
 }
