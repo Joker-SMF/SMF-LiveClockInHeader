@@ -1,4 +1,4 @@
 SMF-LiveClockInHeader
 =====================
 
-To show a dynamic clock in header
+This repo has been moved to - https://github.com/Joker-SMF/SMF-Mods
