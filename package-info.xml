@@ -8,7 +8,7 @@
 
 	<install for="2.0 - 2.0.99">
 		<readme type="file" parsebbc="true">readme.txt</readme>
-		<require-file name="Sources/LiveClockHooks.php" destination="$sourcedir">File to add all hooks</require-file>
+		<require-file name="Sources/LiveClockHooks.php" destination="$sourcedir">File to add hooks</require-file>
 		<require-file name="Sources/LiveClockAdmin.php" destination="$sourcedir">Admin panel of mod</require-file>
 		<require-file name="Sources/LiveClock.php" destination="$sourcedir">Controller of user interface</require-file>
 		<require-file name="Sources/Subs-LiveClock.php" destination="$sourcedir">Database handler</require-file>

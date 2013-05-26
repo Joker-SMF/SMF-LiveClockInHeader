@@ -5,10 +5,17 @@ This modification helps to show a dynamic clock in the header of your forum, ins
 All mod settings are available under
 Admin center -> Configuration -> Live Clock Admin
 
-To enable the mod go to following mentioned link and enable the mod
+Mod comes with an admin panel which provides following features:
 ?action=admin;area=liveclock;
 
-You can edit the timezone configurations from the following link
+- General Features
+1. Enable/Disable the mod
+2. Choose whether you want to show the timezone drop down or not
+3. Use 24/12 hr format clock
+4. Show date with time
+
+- Timezone features
+1. You can edit the timezone configurations from the following link
 action=admin;area=liveclock;sa=displaytimezones
 
 Note - If any of the 2 coloumns is left blank, the mod neglects the value of other column, i.e if you have entered value for 'Timezone Name' only but 'Timezone Difference' hasn't been filled. In that case mod neglects both values.
