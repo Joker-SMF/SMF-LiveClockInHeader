@@ -1,0 +1,34 @@
+<?xml version="1.0"?>
+<!DOCTYPE package-info SYSTEM "http://www.simplemachines.org/xml/package-info">
+<package-info xmlns="http://www.simplemachines.org/xml/package-info" xmlns:smf="http://www.simplemachines.org/">
+	<id>sid2varun:liveclockinheader</id>
+	<name>Live Clock In Header</name>
+	<version>1.1</version>
+	<type>modification</type>
+
+	<install for="2.0 - 2.0.99">
+		<readme type="file" parsebbc="true">readme.txt</readme>
+		<require-file name="Sources/LiveClockHooks.php" destination="$sourcedir">File to add hooks</require-file>
+		<require-file name="Sources/LiveClockAdmin.php" destination="$sourcedir">Admin panel of mod</require-file>
+		<require-file name="Sources/LiveClock.php" destination="$sourcedir">Controller of user interface</require-file>
+		<require-file name="Sources/Subs-LiveClock.php" destination="$sourcedir">Database handler</require-file>
+		<require-file name="Themes/default/LiveClock.template.php" destination="$themedir">Admin template</require-file>
+		<require-file name="Themes/default/languages/LiveClock.english.php" destination="$languagedir">All language Strings</require-file>
+		<require-file name="Themes/default/scripts/LiveClock.js" destination="$themedir/scripts">JS file of mod</require-file>
+		<database>install.php</database>
+		<modification>Modification.xml</modification>
+	</install>
+
+	<uninstall for="2.0 - 2.0.99">
+		<code>uninstall.php</code>
+		<remove-file name="$sourcedir/LiveClockHooks.php" />
+		<remove-file name="$sourcedir/LiveClockAdmin.php" />
+		<remove-file name="$sourcedir/LiveClock.php" />
+		<remove-file name="$sourcedir/Subs-LiveClock.php" />
+		<remove-file name="$themedir/LiveClock.template.php" />
+		<remove-file name="$languagedir/LiveClock.english.php" />
+		<remove-file name="$themedir/scripts/LiveClock.js" />
+		<modification reverse="true">Modification.xml</modification>
+		<redirect url="$scripturl?action=admin;area=packages;sa=browse" timeout="1000" />		
+	</uninstall>
+</package-info>
