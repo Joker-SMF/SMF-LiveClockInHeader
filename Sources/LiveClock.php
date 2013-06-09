@@ -74,7 +74,7 @@ function LC_showClock() {
 	}
 
 	$timezone = '';
-	if (isset($user_info['custom_timezone']) && !empty($user_info['custom_timezone'])) {
+	if (isset($user_info['custom_timezone'])) {
 		$timezone = $user_info['custom_timezone'];
 	}
 	$hour_format = !empty($modSettings['lc_24_hr_format']) ? 'true' : 'false';
