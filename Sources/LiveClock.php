@@ -82,17 +82,36 @@ function LC_showClock() {
 	$showDate = !empty($modSettings['lc_show_date']) ? 'true' : 'false';
 
 	$context['insert_after_template'] .= '
-	<script type="text/javascript" src="'. $settings['default_theme_url']. '/scripts/LiveClock.js"></script>
 	<script type="text/javascript"><!-- // --><![CDATA[
-		//lets make params
-		var params = {
-			timezone : "'. $timezone .'",
-			use24hrFormat : "'. $hour_format .'",
-			timezoneoptions: '. json_encode($context['live_clock_timezones']) .',
-			showTimezoneDropdown : "'. $showTimezoneDropdown .'",
-			showDate : "'. $showDate .'"
+		function isJqueryLoaded() {
+			if (window.jQuery) {
+				var head= document.getElementsByTagName("head")[0];
+				var script= document.createElement("script");
+				script.type= "text/javascript";
+
+				document.write("<script type=\"text/javascript\" src=\"'. $settings['default_theme_url']. '/scripts/LiveClock.js\"><\/script>");
+				liveClockInit();
+			} else {
+				setTimeout(isJqueryLoaded, 50);
+			}
 		}
-		liveClock.initialize(params)
+
+		function liveClockInit() {
+			if(window.liveClock !== undefined) {
+				var params = {
+					timezone : "'. $timezone .'",
+					use24hrFormat : "'. $hour_format .'",
+					timezoneoptions: '. json_encode($context['live_clock_timezones']) .',
+					showTimezoneDropdown : "'. $showTimezoneDropdown .'",
+					showDate : "'. $showDate .'"
+				}
+				liveClock.initialize(params);
+			} else {
+				setTimeout(liveClockInit, 50);
+			}
+		}
+
+		isJqueryLoaded();
 	// ]]></script>';
 }
 
