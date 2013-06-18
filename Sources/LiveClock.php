@@ -36,6 +36,7 @@ if (!defined('SMF'))
 function LC_mainIndex() {
 	global $context;
 
+	loadLanguage('LiveClock');
 	$default_action_func = 'LC_showClock';
 	$subActions = array(
 		'showclock' => 'LC_showClock',
@@ -85,6 +86,7 @@ function LC_showClock() {
 	<script type="text/javascript"><!-- // --><![CDATA[
 		function isJqueryLoaded() {
 			if (window.jQuery) {
+				console.log("jquery loaded");
 				var head= document.getElementsByTagName("head")[0];
 				var script= document.createElement("script");
 				script.type= "text/javascript";
@@ -92,6 +94,7 @@ function LC_showClock() {
 				document.write("<script type=\"text/javascript\" src=\"'. $settings['default_theme_url']. '/scripts/LiveClock.js\"><\/script>");
 				liveClockInit();
 			} else {
+				console.log("jquery not loaded");
 				setTimeout(isJqueryLoaded, 50);
 			}
 		}

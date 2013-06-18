@@ -105,8 +105,9 @@ liveClock.initialize = function (params) {
 	docId.innerHTML= time;
 
 	var _this = this;
+	liveClock.jQRef = jQuery.noConflict();
 	if(liveClock.paramsObj.showTimezoneDropdown === "true") {
-		if($('#live_clock_timezone_options').is(':hidden')) $('#live_clock_timezone_options').show();
+		if(liveClock.jQRef('#live_clock_timezone_options').is(':hidden')) liveClock.jQRef('#live_clock_timezone_options').show();
 		var sel = document.getElementById('live_clock_timezone_options'),
 			items = sel.getElementsByTagName('option');
 	
@@ -137,7 +138,7 @@ liveClock.initialize = function (params) {
 
 liveClock.onTimezoneChange = function(zone) {
 	var _this = this;
-	$.post('index.php', {
+	liveClock.jQRef.post('index.php', {
 		action: 'liveclock',
 		sa: 'updateusertimezone',
 		timezone: zone
