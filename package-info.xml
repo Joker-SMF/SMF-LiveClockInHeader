@@ -17,6 +17,7 @@
 		<require-file name="Themes/default/scripts/LiveClock.js" destination="$themedir/scripts">JS file of mod</require-file>
 		<database>install.php</database>
 		<modification>Modification.xml</modification>
+		<redirect url="?action=admin;area=liveclock" type="inline">Please stand by while you are being redirected to this modification's configuration settings.</redirect>
 	</install>
 
 	<uninstall for="2.0 - 2.0.99">

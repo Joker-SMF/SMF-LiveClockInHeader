@@ -102,10 +102,19 @@ $tables = array(
 );
 
 foreach ($tables as $table => $data) {
-	$smcFunc['db_create_table']('{db_prefix}' . $table, $data['columns'], $data['indexes']);
+	$smcFunc['db_create_table'](
+        '{db_prefix}' . $table,
+        $data['columns'],
+        $data['indexes'],
+        array(),
+        'ignore'
+    );
 }
 
-updateSettings(array('lc_mod_enable' => 1, 'lc_show_timezone_dropdown' => 1, 'lc_24_hr_format' => 0, 'lc_show_date' => 1));
+$smcFunc['db_query']('', '
+    DELETE FROM {db_prefix}live_clock_timezones',
+    array()
+);
 
 $live_clock_timezones = array(
     'Eniwetok, Kwajalein' => '-12',
@@ -143,16 +152,20 @@ $live_clock_timezones = array(
 
 foreach ($live_clock_timezones as $key => $value) {
     $smcFunc['db_insert']('ignore',
-        '{db_prefix}live_clock_timezones', array('zone_name' => 'string', 'zone_diff' => 'string'),
-        array($key, $value), ''
+        '{db_prefix}live_clock_timezones',
+        array('zone_name' => 'string', 'zone_diff' => 'string'),
+        array($key, $value),
+        array($key, $value)
     );
 }
+
+
+updateSettings(array('lc_mod_enable' => 1, 'lc_show_timezone_dropdown' => 1, 'lc_24_hr_format' => 0, 'lc_show_date' => 1));
 
 add_integration_function('integrate_pre_include', '$sourcedir/LiveClockHooks.php');
 add_integration_function('integrate_pre_include', '$sourcedir/LiveClock.php');
 add_integration_function('integrate_admin_areas', 'LC_addAdminPanel');
 add_integration_function('integrate_actions', 'LC_addAction', true);
-
 
 if (SMF == 'SSI')
 	echo 'Database adaptation successful!';
