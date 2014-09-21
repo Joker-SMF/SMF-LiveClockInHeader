@@ -1,4 +1,6 @@
-Live clock in header
+[url=http://custom.simplemachines.org/mods/index.php?mod=3641]Link to Mod[/url]
+
+[b][i]Live clock in header[/i][/b]
 
 This modification helps to show a dynamic clock in the header of your forum, instead of static clock which comes with SMF.
 
@@ -25,7 +27,38 @@ If you made any error while editing default timezone you can reset all the timez
 Admin center -> Configuration -> Live Clock Admin
 
 
-GitHub Link - https://github.com/Joker-SMF/SMF-LiveClockInHeader
+[b]Change Log[/b]
+
+[i]Version Next[/i]
+- Loading scripts in specific order with specific jquery version
+- overhauling of JS with revealing modular pattern
+- XHTML fixes
+- checks refined with usage of typeof, generic function to check null or undefined
+- var scoping in JS
+- params init only once
+- code optimisation
+- Obsolete comment removed
+
+
+[i]Version 1.2[/i]
+- Mod not parsed correctly. Fixed.
+- Duplicate entries while populating DB on mod installation. Fixed.
+
+
+[i]Version 1.1.1[/i]
+- Mod was unable to carry "Western Europe Time, London, Lisbon, Casablanca" as timezone. Fixed.
+- Mod timezone bar unable to load due to jQuery conflict. Fixed.
+- Github repo moved back to https://github.com/Joker-SMF/SMF-LiveClockInHeader
+
+
+[i]Version 1.1[/i]
+- Option added to show timezone dropdown
+- Show date with time
+- Bug fixes, JS optimisations and improvements
+- Github Repo moved to https://github.com/Joker-SMF/SMF-Mods
+
+
+[url=https://github.com/Joker-SMF/SMF-LiveClockInHeader]GitHub Link[/url]
 
 License
  * This SMF Modification is subject to the Mozilla Public License Version
