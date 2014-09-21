@@ -28,13 +28,6 @@
  *
  */
 
-/*
- * params -
- * timezone(use php offset/let mod calculate/timezone selected by user, depends on admin panel settings)
- * show time in am/pm if selected by admin
- * time string (decided by admin/mod default/type used by forum)
- */
-
 var liveClock = (function(jQRef, win) {
 	var paramsObj = null,
 		timer = null,
