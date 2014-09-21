@@ -41,7 +41,7 @@ var liveClock = (function(jQRef, win) {
 		monthsList = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
 
 		init = function(params) {
-			if (typeof(params) === 'undefined') {
+			if (isNullUndefined(params)) {
 				return false;
 			}
 			paramsObj = paramsObj || params;
@@ -64,18 +64,43 @@ var liveClock = (function(jQRef, win) {
 			paramsObj.user24hrFormat = (paramsObj.req24hrFormat == 'true') ? true : false;
 			paramsObj.showDate = (paramsObj.displayDate == 'true') ? true : false;
 
-			if (typeof(paramsObj.timezone) !== 'undefined' && paramsObj.timezone !== '' && paramsObj.timezone !== null) {
-				paramsObj.offset = paramsObj.timezone;
-			} else {
-				paramsObj.offset = Math.abs(new Date().getTimezoneOffset() / 60);
+			if (isNullUndefined(paramsObj.timezone)) {
+				paramsObj.timezone = Math.abs(new Date().getTimezoneOffset() / 60);
 			}
 			executeClock();
+		},
+
+		onTimezoneChange = function(zone) {
+			jQRef.post('index.php', {
+				action: 'liveclock',
+				sa: 'updateusertimezone',
+				timezone: zone
+			}, function(data, textStatus, jqXHR) {
+				if (isNullUndefined(data)) {
+					alert('Something went wrong. Please try again');
+				} else if (!isNullUndefined(data.response) && data.response === true) {
+					for (var i in paramsObj.timezoneoptions) {
+						var current = paramsObj.timezoneoptions[i],
+							id_zone = current.id_zone,
+							zone_diff = parseFloat(current.zone_diff);
+
+						if (id_zone == zone) {
+							paramsObj.timezone = zone_diff;
+						}
+					}
+				} else if (!isNullUndefined(data.response) && data.response === false) {
+					if (!isNullUndefined(data.error)) {
+						alert(data.error);
+					}
+				}
+			}, 'json');
+			return;
 		},
 
 		executeClock = function() {
 			var d = new Date(),
 				utc = d.getTime() + (d.getTimezoneOffset() * 60000),
-				nd = new Date(utc + (3600000 * +paramsObj.offset)),
+				nd = new Date(utc + (3600000 * +paramsObj.timezone)),
 				s = nd.getSeconds(),
 				m = nd.getMinutes(),
 				h = nd.getHours(),
@@ -134,7 +159,7 @@ var liveClock = (function(jQRef, win) {
 							opt.value = current.id_zone;
 							opt.innerHTML = current.zone_name;
 
-							if (zone_diff == paramsObj.offset) {
+							if (zone_diff == paramsObj.timezone) {
 								opt.selected = 'selected';
 							}
 							sel.appendChild(opt);
@@ -147,35 +172,37 @@ var liveClock = (function(jQRef, win) {
 			}, 1000);
 		},
 
-		onTimezoneChange = function(zone) {
-			jQRef.post('index.php', {
-				action: 'liveclock',
-				sa: 'updateusertimezone',
-				timezone: zone
-			}, function(data, textStatus, jqXHR) {
-				if (typeof(data) === 'undefined') {
-					alert('Something went wrong. Please try again');
-				} else if (typeof(data.response) !== 'undefined' && data.response === true) {
-					for (var i in paramsObj.timezoneoptions) {
-						var current = paramsObj.timezoneoptions[i],
-							id_zone = current.id_zone,
-							zone_diff = parseFloat(current.zone_diff);
+		getType = function(obj) {
+			return ({}).toString.call(obj).toLowerCase();
+		},
 
-						if (id_zone == zone) {
-							paramsObj.timezone = zone_diff;
-						}
+		isNullUndefined = function(val) {
+			var isNull = false,
+				type = getType(val);
+
+			switch (type) {
+				case '[object array]':
+					if (val.length === 0) {
+						isNull = true;
 					}
-				} else if (typeof(data.response) !== 'undefined' && data.response === false) {
-					if (typeof(data.error) !== 'undefined' && data.error !== '') {
-						alert(data.error);
+					break;
+
+				case '[object object]':
+					if (Object.keys(val).length === 0) {
+						isNull = true;
 					}
-				}
-			}, 'json');
-			return;
+					break;
+
+				default:
+					if (typeof(val) === "undefined" || val === null || val === "" || val === "null" || val === "undefined") {
+						isNull = true;
+					}
+			}
+			return isNull;
 		};
 
 	return {
 		init: init,
-		onTimezoneChange: onTimezoneChange
+		onTimezoneChange: onTimezoneChange,
 	};
 }(lc_jquery2_0_3, window));
