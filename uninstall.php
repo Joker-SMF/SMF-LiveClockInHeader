@@ -44,5 +44,6 @@ remove_integration_function('integrate_pre_include', '$sourcedir/LiveClockHooks.
 remove_integration_function('integrate_pre_include', '$sourcedir/LiveClock.php');
 remove_integration_function('integrate_admin_areas', 'LC_addAdminPanel');
 remove_integration_function('integrate_actions', 'LC_addAction');
+remove_integration_function('integrate_load_theme', 'LC_includeAssets');
 
 ?>

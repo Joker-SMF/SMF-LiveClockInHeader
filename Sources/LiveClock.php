@@ -33,6 +33,182 @@
 if (!defined('SMF'))
 	die('Hacking attempt...');
 
+
+function LC_includeAssets() {
+	global $settings, $context;
+
+	loadlanguage('LikePosts');
+	$context['insert_after_template'] .= '
+	<script type="text/javascript"><!-- // --><![CDATA[
+		var lpLoaded = false,
+		inConflict = false;
+
+		function compareScriptVersion(v1, v2, callback) {
+			var v1parts = v1.split('.');
+			var v2parts = v2.split('.');
+
+			for (var i = 0; i < v1parts.length; ++i) {
+				if (v2parts.length == i) {
+					//v1 + " is larger"
+					callback(1);
+					return;
+				}
+
+				if (v1parts[i] == v2parts[i]) {
+					continue;
+				} else if (v1parts[i] > v2parts[i]) {
+					//v1 + " is larger";
+					callback(1);
+					return;
+				} else {
+					//v2 + " is larger";
+					callback(2);
+					return;
+				}
+			}
+
+			if (v1parts.length != v2parts.length) {
+				//v2 + " is larger";
+				callback(2);
+				return;
+			}
+			callback(false);
+			return;
+		}
+
+		function loadScript(url, callback) {
+			var script = document.createElement("script");
+			script.type = "text/javascript";
+			script.src = url;
+
+			var head = document.getElementsByTagName("head")[0],
+				done = false;
+
+			script.onload = script.onreadystatechange = function() {
+				if (!done && (!this.readyState || this.readyState == "loaded" || this.readyState == "complete")) {
+					done = true;
+					callback();
+					script.onload = script.onreadystatechange = null;
+					head.removeChild(script);
+				};
+			};
+			head.appendChild(script);
+		}
+
+		// Only do anything if jQuery isn"t defined
+		if (typeof(jQuery) == "undefined") {
+			console.log("jquery not found");
+			if (typeof($) == "function") {
+				console.log("jquery but in conflict");
+				inConflict = true;
+			}
+
+			loadScript("http://ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js", function() {
+				if (typeof(jQuery) !=="undefined") {
+					console.log("directly loaded with version: " + jQuery.fn.jquery);
+					lc_jquery2_0_3 = jQuery.noConflict(true);
+					loadLCScript();
+				}
+			});
+		} else {
+			// jQuery is already loaded
+			console.log("jquery is already loaded with version: " + jQuery.fn.jquery);
+			compareScriptVersion(jQuery.fn.jquery, "2.0.3", function(result) {
+				console.log("result of version check: " + result)
+				switch(result) {
+					case false:
+					case 1:
+						lc_jquery2_0_3 = jQuery.noConflict(true);
+						loadLCScript();
+						break;
+
+					case 2:
+						loadScript("http://ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js", function() {
+							if (typeof(jQuery) !=="undefined") {
+								console.log("after version check loaded with version: " + jQuery.fn.jquery);
+								lc_jquery2_0_3 = jQuery.noConflict(true);
+								loadLCScript();
+							}
+						});
+						break;
+
+					default:
+						loadScript("http://ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js", function() {
+							if (typeof(jQuery) !=="undefined") {
+								console.log("default version check loaded with version: " + jQuery.fn.jquery);
+								lc_jquery2_0_3 = jQuery.noConflict(true);
+								loadLCScript();
+							}
+						});
+						break;
+				}
+			})
+		};
+
+		function loadLCScript() {
+			var js = document.createElement("script");
+			js.type = "text/javascript";
+			js.src = "' . $settings['default_theme_url'] . '/scripts/LiveClock.js";
+			document.body.appendChild(js);
+		}
+	// ]]></script>';
+
+	LC_checkJsonEncode();
+}
+
+function LC_checkJsonEncode() {
+	if (!function_exists('json_encode')) {
+		function json_encode($a = false) {
+
+			switch(gettype($a)) {
+				case 'integer':
+				case 'double':
+					return floatval(str_replace(",", ".", strval($a)));
+				break;
+
+				case 'NULL':
+				case 'resource':
+				case 'unknown':
+					return 'null';
+				break;
+
+				case 'boolean':
+					return $a ? 'true' : 'false' ;
+				break;
+
+				case 'array':
+				case 'object':
+					$output = array();
+					$isAssoc = false;
+
+					foreach(array_keys($a) as $key) {
+						if (!is_int($key)) {
+							$isAssoc = true;
+							break;
+						}
+					}
+
+					if($isAssoc) {
+						foreach($a as $k => $val) {
+							$output []= json_encode($k) . ':' . json_encode($val);
+						}
+						$output = '{' . implode(',', $output) . '}';
+					} else {
+						foreach($a as $val){
+							$output []= json_encode($val);
+						}
+						$output = '[' . implode(',', $output) . ']';
+					}
+					return $output;
+				break;
+
+				default:
+				return '"' . addslashes($a) . '"';
+			}
+		}
+	}
+}
+
 function LC_mainIndex() {
 	global $context;
 
@@ -45,17 +221,6 @@ function LC_mainIndex() {
 
 	if (isset($_REQUEST['sa']) && isset($subActions[$_REQUEST['sa']]) && function_exists($subActions[$_REQUEST['sa']]))
 		return $subActions[$_REQUEST['sa']]();
-
-	$context['insert_after_template'] .= '
-	<script type="text/javascript">
-		var head= document.getElementsByTagName("head")[0];
-		var script= document.createElement("script");
-		script.type= "text/javascript";
-		if (!window.jQuery) {
-			document.write("<script type=\"text/javascript\" src=\"https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js\"><\/script>");
-		}
-	</script>';
-
 	$default_action_func();
 }
 
@@ -84,37 +249,18 @@ function LC_showClock() {
 
 	$context['insert_after_template'] .= '
 	<script type="text/javascript"><!-- // --><![CDATA[
-		function isJqueryLoaded() {
-			if (window.jQuery) {
-				console.log("jquery loaded");
-				var head= document.getElementsByTagName("head")[0];
-				var script= document.createElement("script");
-				script.type= "text/javascript";
-
-				document.write("<script type=\"text/javascript\" src=\"'. $settings['default_theme_url']. '/scripts/LiveClock.js\"><\/script>");
-				liveClockInit();
-			} else {
-				console.log("jquery not loaded");
-				setTimeout(isJqueryLoaded, 50);
+		window.onload = function() {
+			var params = {
+				timezone : "'. $timezone .'",
+				use24hrFormat : "'. $hour_format .'",
+				timezoneoptions: '. json_encode($context['live_clock_timezones']) .',
+				showTimezoneDropdown : "'. $showTimezoneDropdown .'",
+				showDate : "'. $showDate .'"
 			}
+			console.log("test: ");
+			console.log(window.liveClock);
+			liveClock.init(params);
 		}
-
-		function liveClockInit() {
-			if(window.liveClock !== undefined) {
-				var params = {
-					timezone : "'. $timezone .'",
-					use24hrFormat : "'. $hour_format .'",
-					timezoneoptions: '. json_encode($context['live_clock_timezones']) .',
-					showTimezoneDropdown : "'. $showTimezoneDropdown .'",
-					showDate : "'. $showDate .'"
-				}
-				liveClock.initialize(params);
-			} else {
-				setTimeout(liveClockInit, 50);
-			}
-		}
-
-		isJqueryLoaded();
 	// ]]></script>';
 }
 
