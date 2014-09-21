@@ -257,8 +257,6 @@ function LC_showClock() {
 				showTimezoneDropdown : "'. $showTimezoneDropdown .'",
 				showDate : "'. $showDate .'"
 			}
-			console.log("test: ");
-			console.log(window.liveClock);
 			liveClock.init(params);
 		}
 	// ]]></script>';
