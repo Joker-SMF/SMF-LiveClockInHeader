@@ -41,52 +41,59 @@ var liveClock = (function(jQRef, win) {
 		monthsList = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
 
 		init = function(params) {
-			var docId = document.getElementById('live_clock'),
-				offset = null;
+			if (typeof(params) === 'undefined') {
+				return false;
+			}
+			paramsObj = paramsObj || params;
+
+			// Check if elem exist
+			var docId = document.getElementById('live_clock');
+			if (!docId) {
+				timer = setTimeout(function() {
+					init(paramsObj);
+				}, 1000);
+				return false;
+			}
 
 			clearTimeout(timer);
 			timer = null;
 
-			if (!docId) {
-				timer = setTimeout(function() {
-					initialize(params);
-				}, 1000);
-				return;
-			}
-
-			if (typeof(params) === 'undefined') {
-				return;
-			}
-
-			paramsObj = paramsObj || params;
+			// add custom values to paramsObj
+			paramsObj.docId = docId;
 			paramsObj.timezoneoptions = (paramsObj.timezoneoptions) ? paramsObj.timezoneoptions : {};
+			paramsObj.user24hrFormat = (paramsObj.req24hrFormat == 'true') ? true : false;
+			paramsObj.showDate = (paramsObj.displayDate == 'true') ? true : false;
 
-			if (paramsObj.timezone !== '' && paramsObj.timezone !== undefined && paramsObj.timezone !== null) {
-				offset = paramsObj.timezone;
+			if (typeof(paramsObj.timezone) !== 'undefined' && paramsObj.timezone !== '' && paramsObj.timezone !== null) {
+				paramsObj.offset = paramsObj.timezone;
 			} else {
-				offset = Math.abs(new Date().getTimezoneOffset() / 60);
+				paramsObj.offset = Math.abs(new Date().getTimezoneOffset() / 60);
 			}
+			executeClock();
+		},
 
-			var user24hrFormat = (paramsObj.use24hrFormat == 'true') ? true : false;
-			d = new Date();
-			utc = d.getTime() + (d.getTimezoneOffset() * 60000);
-			nd = new Date(utc + (3600000 * +offset));
-
-			var s = nd.getSeconds(),
+		executeClock = function() {
+			var d = new Date(),
+				utc = d.getTime() + (d.getTimezoneOffset() * 60000),
+				nd = new Date(utc + (3600000 * +paramsObj.offset)),
+				s = nd.getSeconds(),
 				m = nd.getMinutes(),
 				h = nd.getHours(),
 				date = nd.getDate(),
 				month = monthsList[nd.getMonth()],
 				year = nd.getFullYear(),
-				am_pm = null;
+				am_pm = null,
+				time = '';
 
 			if (s < 10) {
 				s = '0' + s;
 			}
+
 			if (m < 10) {
 				m = '0' + m;
 			}
-			if (!user24hrFormat) {
+
+			if (!paramsObj.user24hrFormat) {
 				if (h > 12) {
 					h = h - 12;
 					am_pm = ' pm';
@@ -94,16 +101,21 @@ var liveClock = (function(jQRef, win) {
 					am_pm = ' am';
 				}
 			}
+
 			if (h < 10) {
 				h = '0' + h;
 			}
-			var time = '';
-			if (paramsObj.showDate === 'true') time += month + ' ' + date + ', ' + year + ', ';
 
-			if (!user24hrFormat) time += h + ':' + m + ':' + s + am_pm;
-			else time += h + ':' + m + ':' + s;
+			if (paramsObj.showDate) {
+				time += month + ' ' + date + ', ' + year + ', ';
+			}
 
-			docId.innerHTML = time;
+			if (!paramsObj.user24hrFormat) {
+				time += h + ':' + m + ':' + s + am_pm;
+			} else {
+				time += h + ':' + m + ':' + s;
+			}
+			paramsObj.docId.innerHTML = time;
 
 			if (paramsObj.showTimezoneDropdown === "true") {
 				if (jQRef('#live_clock_timezone_options').is(':hidden')) jQRef('#live_clock_timezone_options').show();
@@ -122,7 +134,7 @@ var liveClock = (function(jQRef, win) {
 							opt.value = current.id_zone;
 							opt.innerHTML = current.zone_name;
 
-							if (zone_diff == offset) {
+							if (zone_diff == paramsObj.offset) {
 								opt.selected = 'selected';
 							}
 							sel.appendChild(opt);
@@ -131,7 +143,7 @@ var liveClock = (function(jQRef, win) {
 				}
 			}
 			timer = setTimeout(function() {
-				liveClock.init(paramsObj);
+				executeClock();
 			}, 1000);
 		},
 

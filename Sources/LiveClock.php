@@ -252,10 +252,10 @@ function LC_showClock() {
 		window.onload = function() {
 			var params = {
 				timezone : "'. $timezone .'",
-				use24hrFormat : "'. $hour_format .'",
+				req24hrFormat : "'. $hour_format .'",
 				timezoneoptions: '. json_encode($context['live_clock_timezones']) .',
 				showTimezoneDropdown : "'. $showTimezoneDropdown .'",
-				showDate : "'. $showDate .'"
+				displayDate : "'. $showDate .'"
 			}
 			liveClock.init(params);
 		}
