@@ -51,7 +51,9 @@
 			if (!empty($modSettings['lc_show_timezone_dropdown'])) {
 				echo '
 					<li>
-						<select id="live_clock_timezone_options" onchange="liveClock.onTimezoneChange(this.value)"></select>
+						<select id="live_clock_timezone_options" onchange="liveClock.onTimezoneChange(this.value)">
+							<option></option>
+						</select>
 					</li>';
 			}
 
