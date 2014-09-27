@@ -1,6 +1,6 @@
 /**
  * @package manifest file for Live clock in header
- * @version 1.2
+ * @version 1.3
  * @author Joker (http://www.simplemachines.org/community/index.php?action=profile;u=226111)
  * @copyright Copyright (c) 2012, Siddhartha Gupta
  * @license http://www.mozilla.org/MPL/MPL-1.1.html
