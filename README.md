@@ -38,6 +38,7 @@ Admin center -> Configuration -> Live Clock Admin
 - params init only once
 - code optimisation
 - Obsolete comment removed
+- Using anonymous function concept to invoke the clock class
 
 
 [i]Version 1.2[/i]
