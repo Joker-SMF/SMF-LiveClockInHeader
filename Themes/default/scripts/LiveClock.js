@@ -28,174 +28,178 @@
  *
  */
 
-var liveClock = (function(jQRef, win) {
-	var paramsObj = null,
-		timer = null,
-		monthsList = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+(function(jQRef, win) {
+	function liveClock() {
+		var paramsObj = null,
+			timer = null,
+			monthsList = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
 
-		init = function(params) {
-			if (isNullUndefined(params)) {
-				return false;
-			}
-			paramsObj = paramsObj || params;
-
-			// Check if elem exist
-			var docId = document.getElementById('live_clock');
-			if (!docId) {
-				timer = setTimeout(function() {
-					init(paramsObj);
-				}, 1000);
-				return false;
-			}
-
-			clearTimeout(timer);
-			timer = null;
-
-			// add custom values to paramsObj
-			paramsObj.docId = docId;
-			paramsObj.timezoneoptions = (paramsObj.timezoneoptions) ? paramsObj.timezoneoptions : {};
-			paramsObj.user24hrFormat = (paramsObj.req24hrFormat == 'true') ? true : false;
-			paramsObj.showDate = (paramsObj.displayDate == 'true') ? true : false;
-
-			if (isNullUndefined(paramsObj.timezone)) {
-				paramsObj.timezone = Math.abs(new Date().getTimezoneOffset() / 60);
-			}
-			executeClock();
-		},
-
-		onTimezoneChange = function(zone) {
-			jQRef.post('index.php', {
-				action: 'liveclock',
-				sa: 'updateusertimezone',
-				timezone: zone
-			}, function(data, textStatus, jqXHR) {
-				if (isNullUndefined(data)) {
-					alert('Something went wrong. Please try again');
-				} else if (!isNullUndefined(data.response) && data.response === true) {
-					for (var i in paramsObj.timezoneoptions) {
-						var current = paramsObj.timezoneoptions[i],
-							id_zone = current.id_zone,
-							zone_diff = parseFloat(current.zone_diff);
-
-						if (id_zone == zone) {
-							paramsObj.timezone = zone_diff;
-						}
-					}
-				} else if (!isNullUndefined(data.response) && data.response === false) {
-					if (!isNullUndefined(data.error)) {
-						alert(data.error);
-					}
+			init = function(params) {
+				if (isNullUndefined(params)) {
+					return false;
 				}
-			}, 'json');
-			return;
-		},
+				paramsObj = paramsObj || params;
 
-		executeClock = function() {
-			var d = new Date(),
-				utc = d.getTime() + (d.getTimezoneOffset() * 60000),
-				nd = new Date(utc + (3600000 * +paramsObj.timezone)),
-				s = nd.getSeconds(),
-				m = nd.getMinutes(),
-				h = nd.getHours(),
-				date = nd.getDate(),
-				month = monthsList[nd.getMonth()],
-				year = nd.getFullYear(),
-				am_pm = null,
-				time = '';
-
-			if (s < 10) {
-				s = '0' + s;
-			}
-
-			if (m < 10) {
-				m = '0' + m;
-			}
-
-			if (!paramsObj.user24hrFormat) {
-				if (h > 12) {
-					h = h - 12;
-					am_pm = ' pm';
-				} else {
-					am_pm = ' am';
+				// Check if elem exist
+				var docId = document.getElementById('live_clock');
+				if (!docId) {
+					timer = setTimeout(function() {
+						init(paramsObj);
+					}, 1000);
+					return false;
 				}
-			}
 
-			if (h < 10) {
-				h = '0' + h;
-			}
+				clearTimeout(timer);
+				timer = null;
 
-			if (paramsObj.showDate) {
-				time += month + ' ' + date + ', ' + year + ', ';
-			}
+				// add custom values to paramsObj
+				paramsObj.docId = docId;
+				paramsObj.timezoneoptions = (paramsObj.timezoneoptions) ? paramsObj.timezoneoptions : {};
+				paramsObj.user24hrFormat = (paramsObj.req24hrFormat == 'true') ? true : false;
+				paramsObj.showDate = (paramsObj.displayDate == 'true') ? true : false;
 
-			if (!paramsObj.user24hrFormat) {
-				time += h + ':' + m + ':' + s + am_pm;
-			} else {
-				time += h + ':' + m + ':' + s;
-			}
-			paramsObj.docId.innerHTML = time;
+				if (isNullUndefined(paramsObj.timezone)) {
+					paramsObj.timezone = Math.abs(new Date().getTimezoneOffset() / 60);
+				}
+				executeClock();
+			},
 
-			if (paramsObj.showTimezoneDropdown === "true") {
-				if (jQRef('#live_clock_timezone_options').is(':hidden')) jQRef('#live_clock_timezone_options').show();
-				var sel = document.getElementById('live_clock_timezone_options'),
-					items = sel.getElementsByTagName('option');
-
-				if (items.length !== Object.keys(paramsObj.timezoneoptions).length) {
-					var opt = null;
-
-					if (Object.keys(paramsObj.timezoneoptions).length > 0) {
+			onTimezoneChange = function(zone) {
+				jQRef.post('index.php', {
+					action: 'liveclock',
+					sa: 'updateusertimezone',
+					timezone: zone
+				}, function(data, textStatus, jqXHR) {
+					if (isNullUndefined(data)) {
+						alert('Something went wrong. Please try again');
+					} else if (!isNullUndefined(data.response) && data.response === true) {
 						for (var i in paramsObj.timezoneoptions) {
 							var current = paramsObj.timezoneoptions[i],
+								id_zone = current.id_zone,
 								zone_diff = parseFloat(current.zone_diff);
 
-							opt = document.createElement('option');
-							opt.value = current.id_zone;
-							opt.innerHTML = current.zone_name;
-
-							if (zone_diff == paramsObj.timezone) {
-								opt.selected = 'selected';
+							if (id_zone == zone) {
+								paramsObj.timezone = zone_diff;
 							}
-							sel.appendChild(opt);
+						}
+					} else if (!isNullUndefined(data.response) && data.response === false) {
+						if (!isNullUndefined(data.error)) {
+							alert(data.error);
+						}
+					}
+				}, 'json');
+				return;
+			},
+
+			executeClock = function() {
+				var d = new Date(),
+					utc = d.getTime() + (d.getTimezoneOffset() * 60000),
+					nd = new Date(utc + (3600000 * +paramsObj.timezone)),
+					s = nd.getSeconds(),
+					m = nd.getMinutes(),
+					h = nd.getHours(),
+					date = nd.getDate(),
+					month = monthsList[nd.getMonth()],
+					year = nd.getFullYear(),
+					am_pm = null,
+					time = '';
+
+				if (s < 10) {
+					s = '0' + s;
+				}
+
+				if (m < 10) {
+					m = '0' + m;
+				}
+
+				if (!paramsObj.user24hrFormat) {
+					if (h > 12) {
+						h = h - 12;
+						am_pm = ' pm';
+					} else {
+						am_pm = ' am';
+					}
+				}
+
+				if (h < 10) {
+					h = '0' + h;
+				}
+
+				if (paramsObj.showDate) {
+					time += month + ' ' + date + ', ' + year + ', ';
+				}
+
+				if (!paramsObj.user24hrFormat) {
+					time += h + ':' + m + ':' + s + am_pm;
+				} else {
+					time += h + ':' + m + ':' + s;
+				}
+				paramsObj.docId.innerHTML = time;
+
+				if (paramsObj.showTimezoneDropdown === "true") {
+					if (jQRef('#live_clock_timezone_options').is(':hidden')) jQRef('#live_clock_timezone_options').show();
+					var sel = document.getElementById('live_clock_timezone_options'),
+						items = sel.getElementsByTagName('option');
+
+					if (items.length !== Object.keys(paramsObj.timezoneoptions).length) {
+						var opt = null;
+
+						if (Object.keys(paramsObj.timezoneoptions).length > 0) {
+							for (var i in paramsObj.timezoneoptions) {
+								var current = paramsObj.timezoneoptions[i],
+									zone_diff = parseFloat(current.zone_diff);
+
+								opt = document.createElement('option');
+								opt.value = current.id_zone;
+								opt.innerHTML = current.zone_name;
+
+								if (zone_diff == paramsObj.timezone) {
+									opt.selected = 'selected';
+								}
+								sel.appendChild(opt);
+							}
 						}
 					}
 				}
-			}
-			timer = setTimeout(function() {
-				executeClock();
-			}, 1000);
-		},
+				timer = setTimeout(function() {
+					executeClock();
+				}, 1000);
+			},
 
-		getType = function(obj) {
-			return ({}).toString.call(obj).toLowerCase();
-		},
+			getType = function(obj) {
+				return ({}).toString.call(obj).toLowerCase();
+			},
 
-		isNullUndefined = function(val) {
-			var isNull = false,
-				type = getType(val);
+			isNullUndefined = function(val) {
+				var isNull = false,
+					type = getType(val);
 
-			switch (type) {
-				case '[object array]':
-					if (val.length === 0) {
-						isNull = true;
-					}
-					break;
+				switch (type) {
+					case '[object array]':
+						if (val.length === 0) {
+							isNull = true;
+						}
+						break;
 
-				case '[object object]':
-					if (Object.keys(val).length === 0) {
-						isNull = true;
-					}
-					break;
+					case '[object object]':
+						if (Object.keys(val).length === 0) {
+							isNull = true;
+						}
+						break;
 
-				default:
-					if (typeof(val) === "undefined" || val === null || val === "" || val === "null" || val === "undefined") {
-						isNull = true;
-					}
-			}
-			return isNull;
+					default:
+						if (typeof(val) === "undefined" || val === null || val === "" || val === "null" || val === "undefined") {
+							isNull = true;
+						}
+				}
+				return isNull;
+			};
+
+		return {
+			init: init,
+			onTimezoneChange: onTimezoneChange,
 		};
+	}
 
-	return {
-		init: init,
-		onTimezoneChange: onTimezoneChange,
-	};
+	win.liveClock = liveClock();
 }(lc_jquery2_0_3, window));
