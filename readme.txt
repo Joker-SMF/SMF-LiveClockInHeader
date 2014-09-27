@@ -29,7 +29,7 @@ Admin center -> Configuration -> Live Clock Admin
 
 [b]Change Log[/b]
 
-[i]Version Next[/i]
+[i]Version 1.3[/i]
 - Loading scripts in specific order with specific jquery version
 - overhauling of JS with revealing modular pattern
 - XHTML fixes
