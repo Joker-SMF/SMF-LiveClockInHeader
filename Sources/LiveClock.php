@@ -164,17 +164,14 @@ function LC_checkJsonEncode() {
 				case 'integer':
 				case 'double':
 					return floatval(str_replace(",", ".", strval($a)));
-				break;
 
 				case 'NULL':
 				case 'resource':
 				case 'unknown':
 					return 'null';
-				break;
 
 				case 'boolean':
 					return $a ? 'true' : 'false' ;
-				break;
 
 				case 'array':
 				case 'object':
@@ -200,7 +197,6 @@ function LC_checkJsonEncode() {
 						$output = '[' . implode(',', $output) . ']';
 					}
 					return $output;
-				break;
 
 				default:
 				return '"' . addslashes($a) . '"';
@@ -278,9 +274,9 @@ function LC_updateUserTimezone() {
 	}
 
 	$timezoneVal = (int) $_REQUEST['timezone'];
-
 	require_once($sourcedir . '/Subs-LiveClock.php');
 	$result = LC_updateUserDBZone($timezoneVal);
+
 	if ($result) {
 		$resp_pass = array('response' => true);
 		echo json_encode($resp_pass);
@@ -290,7 +286,6 @@ function LC_updateUserTimezone() {
 		echo json_encode($resp);
 		die();
 	}
-	return;
 }
 
 ?>
