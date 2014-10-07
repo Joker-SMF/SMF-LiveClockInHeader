@@ -33,7 +33,7 @@
 if (!defined('SMF'))
 	die('Hacking attempt...');
 
-function LiveClockAdminPanel($return_config = false) {
+function LiveClockAdminPanel() {
 	global $txt, $context;
 
 	/* I can has Adminz? */
